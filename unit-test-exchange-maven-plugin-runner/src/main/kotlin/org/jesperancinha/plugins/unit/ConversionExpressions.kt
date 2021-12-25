@@ -5,9 +5,9 @@ package org.jesperancinha.plugins.unit
  */
 class ConversionExpressions {
     companion object {
-        private const val GENERIC_GROUP = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\+\\]]*)"
-        private const val GENERIC_GROUP_WITH_NEWLINE = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n\\+]*)"
-        private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n+\\*]*)"
+        private const val GENERIC_GROUP = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\+\\]<>]*)"
+        private const val GENERIC_GROUP_WITH_NEWLINE = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n\\+<>]*)"
+        private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n+\\*<>]*)"
         private const val CONSTANT_GROUP = "(\"[0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]]*\"|[0-9]*)"
 
         private val ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REGEX = Regex("Assert\\.assertNull\\($GENERIC_GROUP\\)")
@@ -48,20 +48,30 @@ class ConversionExpressions {
                     "(\\s*)Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP::class\\.java\\)\n" +
                     "(\\s*)}")
         private const val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 = "\$1shouldThrow<\$11> { \$3 }"
-
         private val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX0 =
             Regex("Mockito\\.verify\\($GENERIC_GROUP\\)\\.$GENERIC_GROUP")
+
         private const val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 = "verify { \$1.\$2 }"
         private val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito\\.verify\\($GENERIC_GROUP_WITH_NEWLINE\\)(\n)?(\\s*)?\\.$GENERIC_GROUP_WITH_NEWLINE\"\\)\n")
         private const val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "verify { \$1.\$4\"\\) }\n"
         private val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 =
             Regex("Mockito\\.verify\\($GENERIC_GROUP_WITH_NEWLINE\\)(\n)?(\\s*)?\\.$GENERIC_GROUP_WITH_NEWLINE_STAR\"\\)\n")
-
         private val FIND_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected")
+
         private val REPLACE_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected = $GENERIC_GROUP::class\\)")
 
+        private val ANY_TYPE_REGEX =
+            Regex("ArgumentMatchers\\.any\\((\n)?(\\s*)?$GENERIC_GROUP::class\\.java\\)")
+        private const val ANY_TYPE_REPLACEMENT = "any<\$3>()"
+
+        private val ANY_STRING_REGEX =
+            Regex("ArgumentMatchers.anyString\\(\\)")
+        private const val ANY_STRING_REPLACEMENT = "any<String>()"
+
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
+            ANY_STRING_REGEX to (ANY_STRING_REPLACEMENT to "import io.kotest.assertions.any"),
+            ANY_TYPE_REGEX to (ANY_TYPE_REPLACEMENT to "import io.kotest.assertions.any"),
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX1 to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 to "import io.kotest.assertions.throwables.shouldThrow"),
             ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldBeNull"),
             ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldNotBeNull"),
@@ -73,7 +83,7 @@ class ConversionExpressions {
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX0 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 to "import io.mockk.verify"),
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify"),
-            VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify"),
+            VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify")
         )
         private val IMPORT_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
             Regex("import org.junit.Before") to "import org.junit.jupiter.api.BeforeEach",
