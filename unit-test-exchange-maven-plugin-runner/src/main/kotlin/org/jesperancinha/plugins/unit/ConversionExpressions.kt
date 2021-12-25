@@ -8,6 +8,9 @@ class ConversionExpressions {
         private const val GENERIC_GROUP = "([0-9a-zA-Z(_\\-\":, /\\.)\\!]*)"
         private const val CONSTANT_GROUP = "(\"[0-9a-zA-Z(_\\-\":, /\\.)\\!]*\"|[0-9]*)"
 
+        private val ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REGEX = Regex("Assert\\.assertNull\\($GENERIC_GROUP\\)")
+        private const val ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT = "\$1.shouldBeNull()"
+
         private val ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REGEX = Regex("Assert\\.assertNotNull\\($GENERIC_GROUP\\)")
         private const val ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT = "\$1.shouldNotBeNull()"
 
@@ -32,6 +35,7 @@ class ConversionExpressions {
         private val REPLACE_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected = $GENERIC_GROUP::class\\)")
 
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
+            ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldBeNull"),
             ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldNotBeNull"),
             EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
             ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX0 to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT0 to "import io.kotest.matchers.shouldBe"),
