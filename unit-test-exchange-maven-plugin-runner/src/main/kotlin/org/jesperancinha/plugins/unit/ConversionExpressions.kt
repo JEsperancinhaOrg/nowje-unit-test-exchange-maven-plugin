@@ -5,8 +5,10 @@ package org.jesperancinha.plugins.unit
  */
 class ConversionExpressions {
     companion object {
-        private const val GENERIC_GROUP = "([0-9a-zA-Z(_\\-\":, /\\.)\\!]*)"
-        private const val CONSTANT_GROUP = "(\"[0-9a-zA-Z(_\\-\":, /\\.)\\!]*\"|[0-9]*)"
+        private const val GENERIC_GROUP = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\+\\]]*)"
+        private const val GENERIC_GROUP_WITH_NEWLINE = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n\\+]*)"
+        private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n+\\*]*)"
+        private const val CONSTANT_GROUP = "(\"[0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]]*\"|[0-9]*)"
 
         private val ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REGEX = Regex("Assert\\.assertNull\\($GENERIC_GROUP\\)")
         private const val ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT = "\$1.shouldBeNull()"
@@ -26,10 +28,23 @@ class ConversionExpressions {
             Regex("assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
         private const val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT1 = "\$1 shouldBe \$2"
 
-        private val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX =
-            Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)\\.thenReturn\\($GENERIC_GROUP\\)")
-        private const val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "every { \$1 } returns \$2"
+        private val ASSERT_CONTAINS_STRING_FROM_ASSERTJ_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertThat\\($GENERIC_GROUP, Matchers.containsString\\($GENERIC_GROUP\\)\\)")
+        private const val ASSERT_CONTAINS_STRING_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT = "\$1 shouldContain \$2"
 
+        private val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX =
+            Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenReturn\\($GENERIC_GROUP\\)")
+        private const val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "every { \$1 } returns \$4"
+
+        private val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX =
+            Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenThrow\\($GENERIC_GROUP\\)")
+        private const val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "every { \$1 } throws \$4"
+
+        private val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX =
+            Regex("Mockito\\.verify\\($GENERIC_GROUP_WITH_NEWLINE\\)(\n)?(\\s*)?\\.$GENERIC_GROUP_WITH_NEWLINE\"\\)\n")
+        private const val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "verify { \$1.\$4\"\\) }\n"
+        private val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 =
+            Regex("Mockito\\.verify\\($GENERIC_GROUP_WITH_NEWLINE\\)(\n)?(\\s*)?\\.$GENERIC_GROUP_WITH_NEWLINE_STAR\"\\)\n")
 
         private val FIND_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected")
         private val REPLACE_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected = $GENERIC_GROUP::class\\)")
@@ -37,10 +52,14 @@ class ConversionExpressions {
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
             ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldBeNull"),
             ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldNotBeNull"),
-            EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
             ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX0 to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT0 to "import io.kotest.matchers.shouldBe"),
             ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.shouldBe"),
-            ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX1 to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT1 to "import io.kotest.matchers.shouldBe")
+            ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX1 to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT1 to "import io.kotest.matchers.shouldBe"),
+            ASSERT_CONTAINS_STRING_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_CONTAINS_STRING_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.string.shouldContain"),
+            EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
+            EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
+            VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify"),
+            VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify")
         )
         private val IMPORT_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
             Regex("import org.junit.Before") to "import org.junit.jupiter.api.BeforeEach",

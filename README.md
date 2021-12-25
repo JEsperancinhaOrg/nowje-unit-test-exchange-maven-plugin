@@ -10,10 +10,10 @@ This plugin works as a tool to convert unit tests from one standard to another. 
 
 ## Options
 
-| Option |Function| Source Code |Target Code| Status        |
-|--------|---|-------------|---|---------------|
-| 1      | Converts from JUnit, Mockito, Hamcrest/AssertJ to MockK, JUpiter and Kotest assertions| Kotlin      |Kotlin| Supported     |
-| 2      | Converts from JUnit, Mockito, Hamcrest/AssertJ to MockK, JUpiter and Kotest assertions| Java        |Kotlin| InDevelopment |
+| Option | Function                                                                                | Source Code |Target Code| Status        |
+|--------|-----------------------------------------------------------------------------------------|-------------|---|---------------|
+| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, JUpiter and Kotest assertions | Kotlin      |Kotlin| Supported     |
+| 2      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, JUpiter and Kotest assertions | Java        |Kotlin| InDevelopment |
 
 ## Before running this plugin
 
@@ -30,4 +30,10 @@ fun testThisStuff() {
 
 3. Make sure the source code and target code match the choice you make
 4. Clean imports and make sure you removed all code not being used.
-5. There are no 100% guarantees that the resulting code will compile and run immediately after you run this. Manual intervention afterward may be necessary.
+5. Remember to always have a space after a comma. This is usually standard and you don't have to think about this.\
+
+```kotlin
+Assert.assertThat(text, Matchers.containsString(test))
+```
+
+6. There are no 100% guarantees that the resulting code will compile and run immediately after you run this. Manual intervention afterward may be necessary.
