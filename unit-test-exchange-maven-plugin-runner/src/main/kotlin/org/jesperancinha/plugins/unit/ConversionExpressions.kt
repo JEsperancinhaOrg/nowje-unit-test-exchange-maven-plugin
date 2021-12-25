@@ -40,6 +40,18 @@ class ConversionExpressions {
             Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenThrow\\($GENERIC_GROUP\\)")
         private const val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "every { \$1 } throws \$4"
 
+        private val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX1 =
+            Regex("(\\s*)try \\{\n" +
+                    "(\\s*)${GENERIC_GROUP_WITH_NEWLINE}\n" +
+                    "(\\s*)Assert\\.fail\\($GENERIC_GROUP\\)\n" +
+                    "(\\s*)} catch \\($GENERIC_GROUP\\)(\\s*)\\{\n" +
+                    "(\\s*)Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP::class\\.java\\)\n" +
+                    "(\\s*)}")
+        private const val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 = "\$1shouldThrow<\$11> { \$3 }"
+
+        private val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX0 =
+            Regex("Mockito\\.verify\\($GENERIC_GROUP\\)\\.$GENERIC_GROUP")
+        private const val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 = "verify { \$1.\$2 }"
         private val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito\\.verify\\($GENERIC_GROUP_WITH_NEWLINE\\)(\n)?(\\s*)?\\.$GENERIC_GROUP_WITH_NEWLINE\"\\)\n")
         private const val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "verify { \$1.\$4\"\\) }\n"
@@ -50,6 +62,7 @@ class ConversionExpressions {
         private val REPLACE_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected = $GENERIC_GROUP::class\\)")
 
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
+            EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX1 to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 to "import io.kotest.assertions.throwables.shouldThrow"),
             ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldBeNull"),
             ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldNotBeNull"),
             ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX0 to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT0 to "import io.kotest.matchers.shouldBe"),
@@ -58,8 +71,9 @@ class ConversionExpressions {
             ASSERT_CONTAINS_STRING_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_CONTAINS_STRING_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.string.shouldContain"),
             EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
+            VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX0 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 to "import io.mockk.verify"),
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify"),
-            VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify")
+            VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify"),
         )
         private val IMPORT_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
             Regex("import org.junit.Before") to "import org.junit.jupiter.api.BeforeEach",

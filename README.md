@@ -12,7 +12,7 @@ This plugin works as a tool to convert unit tests from one standard to another. 
 
 | Option | Function                                                                                | Source Code |Target Code| Status        |
 |--------|-----------------------------------------------------------------------------------------|-------------|---|---------------|
-| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, JUpiter and Kotest assertions | Kotlin      |Kotlin| Supported     |
+| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, JUpiter and Kotest assertions | Kotlin      |Kotlin| InDevelopment     |
 | 2      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, JUpiter and Kotest assertions | Java        |Kotlin| InDevelopment |
 
 ## Before running this plugin
