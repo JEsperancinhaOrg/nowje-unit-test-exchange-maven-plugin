@@ -5,9 +5,9 @@ package org.jesperancinha.plugins.unit
  */
 class ConversionExpressions {
     companion object {
-        private const val GENERIC_GROUP = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\+\\]<>]*)"
-        private const val GENERIC_GROUP_WITH_NEWLINE = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n\\+<>]*)"
-        private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n+\\*<>]*)"
+        private const val GENERIC_GROUP = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\+\\]<>{}]*)"
+        private const val GENERIC_GROUP_WITH_NEWLINE = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n\\+<>{}]*)"
+        private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n+\\*<>{}]*)"
         private const val CONSTANT_GROUP = "(\"[0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]]*\"|[0-9]*)"
 
         private val ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REGEX = Regex("Assert\\.assertNull\\($GENERIC_GROUP\\)")
