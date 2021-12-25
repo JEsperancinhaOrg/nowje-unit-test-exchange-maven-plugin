@@ -1,6 +1,12 @@
 # unit-test-exchange-maven-plugin
 
+[![Status badge](https://img.shields.io/static/v1.svg?label=Status&message=Under%20Construction%20🚧&color=informational)](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin)
+
 This plugin works as a tool to convert unit tests from one standard to another. The goal is to support many times
+
+## Release Dates
+
+--- Stand By ---
 
 ## Options
 

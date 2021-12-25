@@ -5,16 +5,32 @@ package org.jesperancinha.plugins.unit
  */
 class ConversionExpressions {
     companion object {
-        private const val GENERIC_GROUP = "([0-9a-zA-Z(_\\-\":, /.)]*)"
+        private const val GENERIC_GROUP = "([0-9a-zA-Z(_\\-\":, /\\.)\\!]*)"
 
         private val ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REGEX = Regex("Assert\\.assertNotNull\\($GENERIC_GROUP\\)")
         private const val ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT = "\$1.shouldNotBeNull()"
+
+        private val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
+        private const val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT = "\$1 shouldBe \$2"
+
+        private val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX1 =
+            Regex("assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
+        private const val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT1 = "\$1 shouldBe \$2"
+
+        private val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX =
+            Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)\\.thenReturn\\($GENERIC_GROUP\\)")
+        private const val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "every { \$1 } returns \$2"
+
+
         private val FIND_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected")
         private val REPLACE_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected = $GENERIC_GROUP::class\\)")
 
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
-            ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldNotBeNull")
-
+            ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldNotBeNull"),
+            EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
+            ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.shouldBe"),
+            ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX1 to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT1 to "import io.kotest.matchers.shouldBe")
         )
         private val IMPORT_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
             Regex("import org.junit.Before") to "import org.junit.jupiter.api.BeforeEach",
@@ -99,14 +115,13 @@ class ConversionExpressions {
                     val (replace, import) = instructions.second
                     val contains = acc.contains(find)
                     if (contains) {
-                        val replace =
+                        val replacedText =
                             acc.replace(find,
                                 replace)
-                        val stringList = replace.split("\n").toMutableList()
+                        val stringList = replacedText.split("\n").toMutableList()
                         stringList.add(2, import)
-                        return stringList.joinToString("\n")
-                    }
-                    return acc
+                        stringList.joinToString("\n")
+                    } else acc
                 }
 
         private fun procesAnnotations(originalText: String) = ANNOTATIONS_REPLACEMENT_JUNIT_TO_JUPITER
