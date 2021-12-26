@@ -36,7 +36,8 @@ fun testThisStuff() {
 Assert.assertThat(text, Matchers.containsString(test))
 ```
 
-6.  There are no 100% guarantees that the resulting code will compile and run immediately after you run this. Manual intervention afterward may be necessary.
+6. Take special note on error messages. This converter does not keep the error messages in most cases. Frameworks like Kotest already describe with enough depth what happens to a test when it fails.
+7. There are no 100% guarantees that the resulting code will compile and run immediately after you run this. Manual intervention afterward may be necessary.
 
 ## Buy me a coffee
 

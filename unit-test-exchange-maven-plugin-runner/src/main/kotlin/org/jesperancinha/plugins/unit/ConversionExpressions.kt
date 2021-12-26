@@ -6,7 +6,7 @@ package org.jesperancinha.plugins.unit
  */
 class ConversionExpressions {
     companion object {
-        private const val GENERIC_SEARCH_CHARACTERS = "0-9a-zA-Z(_\\-\":,/\\.)\\!\\[\\]\\+<>{}#\\?\\\\"
+        private const val GENERIC_SEARCH_CHARACTERS = "0-9a-zA-Z(_\\-\":,/\\.)\\!\\[\\]\\+<>{}#\\?\\\\\\$"
         private const val GENERIC_SEARCH_CHARACTERS_AND_SPACE = "$GENERIC_SEARCH_CHARACTERS "
         private const val GENERIC_GROUP_ALL = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*)"
         private const val GENERIC_GROUP = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*[$GENERIC_SEARCH_CHARACTERS]+)"
@@ -16,6 +16,10 @@ class ConversionExpressions {
         private const val CONSTANT_GROUP = "(\"[$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*\"|[0-9]*|[A-Z_]*)"
         private const val CONSTANT_GROUP1 = "(([A-Z]+[a-z]*(\\.)?)*)"
         private const val VARIABLE_GROUP = "([a-zA-Z_]*)"
+
+        private val FAIL_FROM_JUNIT_TO_EXCEPTION_REGEX =
+            Regex("Assert\\.fail\\($GENERIC_GROUP\\)")
+        private const val FAIL_FROM_JUNIT_TO_EXCEPTION_REPLACEMENT = "throw RuntimeException(\$1)"
 
         private val MOCK_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito\\.mock\\((\n)?(\\s)*$GENERIC_GROUP::class\\.java\\)")
@@ -177,6 +181,10 @@ class ConversionExpressions {
             Regex("ArgumentMatchers\\.same\\($GENERIC_GROUP\\)")
         private const val ANY_SAME_REPLACEMENT = "$1"
 
+        private val SLOT_REGEX =
+            Regex("ArgumentCaptor.forClass\\((\n)?(\\s)*$GENERIC_GROUP::class\\.java\\)")
+        private const val SLOT_REPLACEMENT = "slot<\$3>()"
+
         private val CORRECTION1_REGEX =
             Regex("$GENERIC_GROUP shouldNotBe \\($GENERIC_GROUP\\)")
         private const val CORRECTION1_REPLACEMENT = "\$1 shouldNotBe \$2"
@@ -186,9 +194,11 @@ class ConversionExpressions {
         private const val CORRECTION2_REPLACEMENT = "\$1 shouldBe \$2"
 
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
+            FAIL_FROM_JUNIT_TO_EXCEPTION_REGEX to (FAIL_FROM_JUNIT_TO_EXCEPTION_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
             ANY_STRING_REGEX to (ANY_STRING_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
             ANY_TYPE_REGEX to (ANY_TYPE_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
             ANY_SAME_REGEX to (ANY_SAME_REPLACEMENT to emptyArray()),
+            SLOT_REGEX to (SLOT_REPLACEMENT to arrayOf("import io.mockk.slot")),
             MOCK_FROM_MOCKITO_TO_MOCKK_REGEX to (MOCK_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.mockk")),
             ASSERT_EQUAL_TO_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_EQUAL_TO_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.shouldBe")),
             ASSERT_GREATER_THAN_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_GREATER_THAN_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.ints.shouldBeGreaterThan")),
