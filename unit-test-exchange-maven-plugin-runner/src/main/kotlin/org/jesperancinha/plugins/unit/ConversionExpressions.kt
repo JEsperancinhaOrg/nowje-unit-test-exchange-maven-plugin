@@ -15,6 +15,7 @@ class ConversionExpressions {
         private const val GENERIC_GROUP_WITH_STAR = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\*]*)"
         private const val CONSTANT_GROUP = "(\"[$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*\"|[0-9]*|[A-Z_]*)"
         private const val CONSTANT_GROUP1 = "(([A-Z]+[a-z]*(\\.)?)*)"
+        private const val CONSTANT_GROUP2 = "([a-zA-Z]*)"
         private const val VARIABLE_GROUP = "([a-zA-Z_]*)"
 
         private val FAIL_FROM_JUNIT_TO_EXCEPTION_REGEX =
@@ -151,6 +152,10 @@ class ConversionExpressions {
                     "(\\s*)}")
         private const val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 = "\$1shouldThrow<\$11> { \$3 }"
 
+        private val VERIFY_ATLEAST_FROM_MOCKITO_TO_MOCKK_REGEX =
+            Regex("Mockito.verify\\($GENERIC_GROUP, Mockito\\.atLeast\\($GENERIC_GROUP\\)\\)(\n)?(\\s)*\\.$GENERIC_GROUP_ALL")
+        private const val VERIFY_ATLEAST_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "verify(atLeast = \$2) { \$1.\$5 }"
+
         private val VERIFY_TIMES_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito\\.verify\\($GENERIC_GROUP, (Mockito\\.)?times\\($CONSTANT_GROUP\\)\\)\\.$GENERIC_GROUP")
         private const val VERIFY_TIMES_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "verify\\(exactly = \$3\\) { \$1.\$4 }"
@@ -192,6 +197,10 @@ class ConversionExpressions {
         private val CORRECTION2_REGEX =
             Regex("$GENERIC_GROUP shouldBe \\($GENERIC_GROUP\\)")
         private const val CORRECTION2_REPLACEMENT = "\$1 shouldBe \$2"
+
+        private val CORRECTION3_REGEX =
+            Regex("$CONSTANT_GROUP2\\.capture\\(\\)")
+        private const val CORRECTION3_REPLACEMENT = "capture\\(\$1\\)"
 
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
             FAIL_FROM_JUNIT_TO_EXCEPTION_REGEX to (FAIL_FROM_JUNIT_TO_EXCEPTION_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
@@ -238,6 +247,7 @@ class ConversionExpressions {
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX0 to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 to arrayOf("import io.mockk.every",
                 "import io.mockk.mockk")),
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.every")),
+            VERIFY_ATLEAST_FROM_MOCKITO_TO_MOCKK_REGEX to (VERIFY_ATLEAST_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.verify")),
             VERIFY_TIMES_FROM_MOCKITO_TO_MOCKK_REGEX to (VERIFY_TIMES_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.verify")),
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX0 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 to arrayOf("import io.mockk.verify")),
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.verify")),
@@ -246,6 +256,7 @@ class ConversionExpressions {
             ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeTrue")),
             CORRECTION1_REGEX to (CORRECTION1_REPLACEMENT to emptyArray()),
             CORRECTION2_REGEX to (CORRECTION2_REPLACEMENT to emptyArray()),
+            CORRECTION3_REGEX to (CORRECTION3_REPLACEMENT to emptyArray()),
         )
         private val IMPORT_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
             Regex("import org.junit.Before") to "import org.junit.jupiter.api.BeforeEach",
@@ -261,6 +272,7 @@ class ConversionExpressions {
             Regex("import org.hamcrest.core.Is(;)?\n") to "",
             Regex("import org.mockito.Mockito(;)?\n") to "",
             Regex("import org.junit.Ignore(;)?\n") to "",
+            Regex("import org.mockito.ArgumentCaptor(;)?\n") to "",
         )
 
         private val ANNOTATIONS_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
