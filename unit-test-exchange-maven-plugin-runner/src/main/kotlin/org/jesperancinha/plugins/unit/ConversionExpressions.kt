@@ -1,36 +1,88 @@
 package org.jesperancinha.plugins.unit
 
+
 /**
  * Created by jofisaes on 25/12/2021
  */
 class ConversionExpressions {
     companion object {
-        private const val GENERIC_GROUP = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\+\\]<>{}]*)"
-        private const val GENERIC_GROUP_WITH_NEWLINE = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n\\+<>{}]*)"
-        private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]\\n+\\*<>{}]*)"
-        private const val CONSTANT_GROUP = "(\"[0-9a-zA-Z(_\\-\":, /\\.)\\!\\[\\]]*\"|[0-9]*)"
+        private const val GENERIC_SEARCH_CHARACTERS = "0-9a-zA-Z(_\\-\":,/\\.)\\!\\[\\]\\+<>{}#"
+        private const val GENERIC_SEARCH_CHARACTERS_AND_SPACE = "$GENERIC_SEARCH_CHARACTERS "
+        private const val GENERIC_GROUP_ALL = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]* )"
+        private const val GENERIC_GROUP = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*[$GENERIC_SEARCH_CHARACTERS]+)"
+        private const val GENERIC_GROUP_WITH_NEWLINE = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n]*)"
+        private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n\\*]*)"
+        private const val CONSTANT_GROUP = "(\"[$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*\"|[0-9]*|[A-Z_]*)"
 
-        private val ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REGEX = Regex("Assert\\.assertNull\\($GENERIC_GROUP\\)")
-        private const val ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT = "\$1.shouldBeNull()"
+        private val MOCK_FROM_MOCKITO_TO_MOCKK_REGEX =
+            Regex("Mockito\\.mock\\($GENERIC_GROUP::class\\.java\\)")
+        private const val MOCK_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "mockk<\$1>()"
 
-        private val ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REGEX = Regex("Assert\\.assertNotNull\\($GENERIC_GROUP\\)")
-        private const val ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT = "\$1.shouldNotBeNull()"
+        private val DISABLE_FROM_JUNIT_TO_KOTEST_REGEX =
+            Regex("@Ignore\\(\"$GENERIC_GROUP_ALL\"\\)")
+        private const val DISABLE_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "@Disabled(\"\$1\")"
 
-        private val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX0 =
+        private val ASSERT_ARRAY_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertArrayEquals\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
+        private const val ASSERT_ARRAY_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$2.shouldContainExactly(\$1)"
+
+        private val ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 =
+            Regex("Assert\\.assertFalse\\($CONSTANT_GROUP\\s*(==(=)?|\\.equals\\()\\s*$GENERIC_GROUP\\)\\)*")
+        private const val ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$4 shouldNotBe \$1"
+
+        private val ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertFalse\\($GENERIC_GROUP\\s*(==(=)?|\\.equals\\()\\s*$GENERIC_GROUP\\)\\)*")
+        private const val ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldNotBe \$4"
+
+        private val ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 =
+            Regex("Assert\\.assertTrue\\($CONSTANT_GROUP\\s*(==(=)?|\\.equals\\()\\s*$GENERIC_GROUP\\)\\)*")
+        private const val ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$4 shouldBe \$1"
+
+        private val ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertTrue\\($GENERIC_GROUP\\s*(==(=)?|\\.equals\\()\\s*$GENERIC_GROUP\\)\\)*")
+        private const val ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldBe \$4"
+
+        private val ASSERT_EMPTY_FROM_HAMCREST_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertThat\\($GENERIC_GROUP, Matchers.`is`\\(Matchers\\.empty\\(\\)\\)\\)")
+        private const val ASSERT_EMPTY_FROM_HAMCREST_TO_KOTEST_REPLACEMENT = "\$1.shouldBeEmpty()"
+
+        private val ASSERT_IS_FROM_HAMCREST_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertThat\\($GENERIC_GROUP, Matchers.`is`\\($GENERIC_GROUP\\)\\)")
+        private const val ASSERT_IS_FROM_HAMCREST_TO_KOTEST_REPLACEMENT = "\$1 shouldBe \$2"
+
+        private val ASSERT_HAS_SIZE_FROM_HAMCREST_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertThat\\($GENERIC_GROUP, Matchers.hasSize\\($GENERIC_GROUP\\)\\)")
+        private const val ASSERT_HAS_SIZE_FROM_HAMCREST_TO_KOTEST_REPLACEMENT = "\$1.shouldHaveSize(\$2)"
+
+        private val ASSERT_NULL_VALUE_IS_IS_FROM_HAMCREST_TO_KOTEST_REGEX =
+            Regex("MatcherAssert\\.assertThat\\($GENERIC_GROUP, Is.`is`\\(IsNull\\.nullValue\\(\\)\\)\\)")
+        private const val ASSERT_NULL_VALUE_IS_IS_FROM_HAMCREST_TO_KOTEST_REPLACEMENT = "\$1.shouldBeNull()"
+
+        private val ASSERT_NULL_FROM_JUNIT_TO_KOTEST_REGEX = Regex("Assert\\.assertNull\\($GENERIC_GROUP\\)")
+        private const val ASSERT_NULL_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1.shouldBeNull()"
+
+        private val ASSERT_NOTNULL_FROM_JUNIT_TO_KOTEST_REGEX = Regex("Assert\\.assertNotNull\\($GENERIC_GROUP\\)")
+        private const val ASSERT_NOTNULL_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1.shouldNotBeNull()"
+
+        private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 =
             Regex("Assert\\.assertEquals\\($CONSTANT_GROUP, $GENERIC_GROUP\\)")
-        private const val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT0 = "\$2 shouldBe \$1"
+        private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$2 shouldBe \$1"
 
-        private val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX =
+        private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX =
             Regex("Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
-        private const val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT = "\$1 shouldBe \$2"
+        private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldBe \$2"
 
-        private val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX1 =
+        private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX1 =
             Regex("assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
-        private const val ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT1 = "\$1 shouldBe \$2"
+        private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 = "\$1 shouldBe \$2"
 
-        private val ASSERT_CONTAINS_STRING_FROM_ASSERTJ_TO_KOTEST_REGEX =
+        private val ASSERT_SAME_FROM_JUNIT_TO_KOTEST_REGEX1 =
+            Regex("Assert\\.assertSame\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
+        private const val ASSERT_SAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 = "\$1 shouldBeSameInstanceAs \$2"
+
+        private val ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REGEX =
             Regex("Assert\\.assertThat\\($GENERIC_GROUP, Matchers.containsString\\($GENERIC_GROUP\\)\\)")
-        private const val ASSERT_CONTAINS_STRING_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT = "\$1 shouldContain \$2"
+        private const val ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldContain \$2"
 
         private val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenReturn\\($GENERIC_GROUP\\)")
@@ -72,13 +124,25 @@ class ConversionExpressions {
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
             ANY_STRING_REGEX to (ANY_STRING_REPLACEMENT to "import io.kotest.assertions.any"),
             ANY_TYPE_REGEX to (ANY_TYPE_REPLACEMENT to "import io.kotest.assertions.any"),
+            MOCK_FROM_MOCKITO_TO_MOCKK_REGEX to (MOCK_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.mockk"),
+            ASSERT_ARRAY_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_ARRAY_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.collections.shouldContainExactly"),
+            DISABLE_FROM_JUNIT_TO_KOTEST_REGEX to (DISABLE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.collections.shouldContainExactly"),
+            ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 to (ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 to "import io.kotest.matchers.shouldNotBe"),
+            ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.shouldNotBe"),
+            ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 to (ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 to "import io.kotest.matchers.shouldBe"),
+            ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.shouldBe"),
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX1 to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 to "import io.kotest.assertions.throwables.shouldThrow"),
-            ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldBeNull"),
-            ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_NOTNULL_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldNotBeNull"),
-            ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX0 to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT0 to "import io.kotest.matchers.shouldBe"),
-            ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.shouldBe"),
-            ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REGEX1 to (ASSERT_EQUALS_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT1 to "import io.kotest.matchers.shouldBe"),
-            ASSERT_CONTAINS_STRING_FROM_ASSERTJ_TO_KOTEST_REGEX to (ASSERT_CONTAINS_STRING_FROM_ASSERTJ_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.string.shouldContain"),
+            ASSERT_EMPTY_FROM_HAMCREST_TO_KOTEST_REGEX to (ASSERT_EMPTY_FROM_HAMCREST_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.collections.shouldBeEmpty"),
+            ASSERT_IS_FROM_HAMCREST_TO_KOTEST_REGEX to (ASSERT_IS_FROM_HAMCREST_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.shouldBe"),
+            ASSERT_HAS_SIZE_FROM_HAMCREST_TO_KOTEST_REGEX to (ASSERT_HAS_SIZE_FROM_HAMCREST_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.collections.shouldHaveSize"),
+            ASSERT_NULL_VALUE_IS_IS_FROM_HAMCREST_TO_KOTEST_REGEX to (ASSERT_NULL_VALUE_IS_IS_FROM_HAMCREST_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldBeNull"),
+            ASSERT_NULL_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_NULL_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldBeNull"),
+            ASSERT_NOTNULL_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_NOTNULL_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.nulls.shouldNotBeNull"),
+            ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 to "import io.kotest.matchers.shouldBe"),
+            ASSERT_SAME_FROM_JUNIT_TO_KOTEST_REGEX1 to (ASSERT_SAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 to "import io.kotest.matchers.types.shouldBeSameInstanceAs"),
+            ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.shouldBe"),
+            ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX1 to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 to "import io.kotest.matchers.shouldBe"),
+            ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.string.shouldContain"),
             EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX0 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 to "import io.mockk.verify"),
@@ -91,8 +155,14 @@ class ConversionExpressions {
             Regex("import org.junit.runner.RunWith") to "import org.junit.jupiter.api.extension.ExtendWith",
             Regex("import org.mockito.junit.MockitoJUnitRunner") to "import io.mockk.junit5.MockKExtension",
             Regex("import org.mockito.Mock\n") to "import io.mockk.impl.annotations.MockK\n",
-            Regex("import org.junit.Assert(;)?") to "",
-            Regex("import org.junit.runner.RunWith(;)?") to "",
+            Regex("import org.junit.Assert(;)?\n") to "",
+            Regex("import org.junit.runner.RunWith(;)?\n") to "",
+            Regex("import org.hamcrest.Matchers(;)?\n") to "",
+            Regex("import org.hamcrest.core.IsNull(;)?\n") to "",
+            Regex("import org.hamcrest.MatcherAssert(;)?\n") to "",
+            Regex("import org.hamcrest.core.Is(;)?\n") to "",
+            Regex("import org.mockito.Mockito(;)?\n") to "",
+            Regex("import org.junit.Ignore(;)?\n") to "",
         )
 
         private val ANNOTATIONS_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
