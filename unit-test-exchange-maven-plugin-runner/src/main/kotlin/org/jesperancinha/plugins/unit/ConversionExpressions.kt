@@ -18,8 +18,8 @@ class ConversionExpressions {
         private const val VARIABLE_GROUP = "([a-zA-Z_]*)"
 
         private val MOCK_FROM_MOCKITO_TO_MOCKK_REGEX =
-            Regex("Mockito\\.mock\\($GENERIC_GROUP::class\\.java\\)")
-        private const val MOCK_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "mockk<\$1>()"
+            Regex("Mockito\\.mock\\((\n)?(\\s)*$GENERIC_GROUP::class\\.java\\)")
+        private const val MOCK_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "mockk<\$3>()"
 
         private val DISABLE_FROM_JUNIT_TO_KOTEST_REGEX =
             Regex("@Ignore\\(\"$GENERIC_GROUP_ALL\"\\)")
@@ -32,6 +32,18 @@ class ConversionExpressions {
         private val ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REGEX =
             Regex("Assert\\.assertFalse\\($GENERIC_GROUP_WITH_STAR\\)")
         private const val ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1.shouldBeFalse()"
+
+        private val ASSERT_GREATER_THAN_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertTrue\\($GENERIC_GROUP_WITH_STAR, $GENERIC_GROUP_WITH_STAR > $CONSTANT_GROUP\\)")
+        private const val ASSERT_GREATER_THAN_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$2 shouldBeGreaterThan \$3"
+
+        private val ASSERT_EQUAL_TO_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertTrue\\($GENERIC_GROUP_WITH_STAR, $GENERIC_GROUP_WITH_STAR == $CONSTANT_GROUP\\)")
+        private const val ASSERT_EQUAL_TO_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$2 shouldBe \$3"
+
+        private val ASSERT_TRUE_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertTrue\\($GENERIC_GROUP_WITH_STAR, $GENERIC_GROUP_WITH_STAR\\)")
+        private const val ASSERT_TRUE_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$2.shouldBeTrue()"
 
         private val ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REGEX =
             Regex("Assert\\.assertTrue\\($GENERIC_GROUP_WITH_STAR\\)")
@@ -68,6 +80,9 @@ class ConversionExpressions {
         private val ASSERT_NULL_VALUE_IS_IS_FROM_HAMCREST_TO_KOTEST_REGEX =
             Regex("MatcherAssert\\.assertThat\\($GENERIC_GROUP, Is.`is`\\(IsNull\\.nullValue\\(\\)\\)\\)")
         private const val ASSERT_NULL_VALUE_IS_IS_FROM_HAMCREST_TO_KOTEST_REPLACEMENT = "\$1.shouldBeNull()"
+
+        private val ASSERT_NULL_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REGEX = Regex("Assert\\.assertNull\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
+        private const val ASSERT_NULL_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$2.shouldBeNull()"
 
         private val ASSERT_NULL_FROM_JUNIT_TO_KOTEST_REGEX = Regex("Assert\\.assertNull\\($GENERIC_GROUP\\)")
         private const val ASSERT_NULL_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1.shouldBeNull()"
@@ -175,6 +190,9 @@ class ConversionExpressions {
             ANY_TYPE_REGEX to (ANY_TYPE_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
             ANY_SAME_REGEX to (ANY_SAME_REPLACEMENT to emptyArray()),
             MOCK_FROM_MOCKITO_TO_MOCKK_REGEX to (MOCK_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.mockk")),
+            ASSERT_EQUAL_TO_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_EQUAL_TO_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.shouldBe")),
+            ASSERT_GREATER_THAN_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_GREATER_THAN_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.ints.shouldBeGreaterThan")),
+            ASSERT_TRUE_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_TRUE_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeTrue")),
             ASSERT_ARRAY_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_ARRAY_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf(
                 "import io.kotest.matchers.collections.shouldContainExactly")),
             ASSERT_SAME_FROM_JUNIT_TO_KOTEST_REGEX0 to (ASSERT_SAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 to arrayOf("import io.kotest.matchers.types.shouldBeSameInstanceAs")),
@@ -195,6 +213,7 @@ class ConversionExpressions {
                 "import io.kotest.matchers.collections.shouldHaveSize")),
             ASSERT_NULL_VALUE_IS_IS_FROM_HAMCREST_TO_KOTEST_REGEX to (ASSERT_NULL_VALUE_IS_IS_FROM_HAMCREST_TO_KOTEST_REPLACEMENT to arrayOf(
                 "import io.kotest.matchers.nulls.shouldBeNull")),
+            ASSERT_NULL_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_NULL_WITH_MESSAGE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.nulls.shouldBeNull")),
             ASSERT_NULL_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_NULL_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.nulls.shouldBeNull")),
             ASSERT_NOTNULL_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_NOTNULL_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.nulls.shouldNotBeNull")),
             ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX4 to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT4 to arrayOf("import io.kotest.matchers.shouldBe")),
