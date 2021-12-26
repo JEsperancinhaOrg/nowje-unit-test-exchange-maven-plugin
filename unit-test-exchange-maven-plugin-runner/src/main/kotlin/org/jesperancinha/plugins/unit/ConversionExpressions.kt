@@ -8,7 +8,7 @@ class ConversionExpressions {
     companion object {
         private const val GENERIC_SEARCH_CHARACTERS = "0-9a-zA-Z(_\\-\":,/\\.)\\!\\[\\]\\+<>{}#"
         private const val GENERIC_SEARCH_CHARACTERS_AND_SPACE = "$GENERIC_SEARCH_CHARACTERS "
-        private const val GENERIC_GROUP_ALL = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]* )"
+        private const val GENERIC_GROUP_ALL = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*)"
         private const val GENERIC_GROUP = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*[$GENERIC_SEARCH_CHARACTERS]+)"
         private const val GENERIC_GROUP_WITH_NEWLINE = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n\\*]*)"
@@ -76,6 +76,12 @@ class ConversionExpressions {
             Regex("assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
         private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 = "\$1 shouldBe \$2"
 
+
+        private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX2 =
+            Regex("Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP_WITH_NEWLINE\\)")
+        private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT2 = "\$2 shouldBe \$1"
+
+
         private val ASSERT_SAME_FROM_JUNIT_TO_KOTEST_REGEX1 =
             Regex("Assert\\.assertSame\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
         private const val ASSERT_SAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 = "\$1 shouldBeSameInstanceAs \$2"
@@ -87,6 +93,10 @@ class ConversionExpressions {
         private val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenReturn\\($GENERIC_GROUP\\)")
         private const val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "every { \$1 } returns \$4"
+
+        private val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX0 =
+            Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenThrow\\($GENERIC_GROUP::class\\.java\\)")
+        private const val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 = "every { \$1 } throws \$4()"
 
         private val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenThrow\\($GENERIC_GROUP\\)")
@@ -100,17 +110,23 @@ class ConversionExpressions {
                     "(\\s*)Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP::class\\.java\\)\n" +
                     "(\\s*)}")
         private const val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 = "\$1shouldThrow<\$11> { \$3 }"
+
+        private val VERIFY_TIMES_FROM_MOCKITO_TO_MOCKK_REGEX =
+            Regex("Mockito\\.verify\\($GENERIC_GROUP, (Mockito\\.)?times\\($CONSTANT_GROUP\\)\\)\\.$GENERIC_GROUP")
+        private const val VERIFY_TIMES_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "verify\\(exactly = \$3\\) { \$1.\$4 }"
+
         private val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX0 =
             Regex("Mockito\\.verify\\($GENERIC_GROUP\\)\\.$GENERIC_GROUP")
-
         private const val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 = "verify { \$1.\$2 }"
+
         private val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito\\.verify\\($GENERIC_GROUP_WITH_NEWLINE\\)(\n)?(\\s*)?\\.$GENERIC_GROUP_WITH_NEWLINE\"\\)\n")
         private const val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "verify { \$1.\$4\"\\) }\n"
+
         private val VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 =
             Regex("Mockito\\.verify\\($GENERIC_GROUP_WITH_NEWLINE\\)(\n)?(\\s*)?\\.$GENERIC_GROUP_WITH_NEWLINE_STAR\"\\)\n")
-        private val FIND_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected")
 
+        private val FIND_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected")
         private val REPLACE_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected = $GENERIC_GROUP::class\\)")
 
         private val ANY_TYPE_REGEX =
@@ -126,7 +142,7 @@ class ConversionExpressions {
             ANY_TYPE_REGEX to (ANY_TYPE_REPLACEMENT to "import io.kotest.assertions.any"),
             MOCK_FROM_MOCKITO_TO_MOCKK_REGEX to (MOCK_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.mockk"),
             ASSERT_ARRAY_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_ARRAY_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.collections.shouldContainExactly"),
-            DISABLE_FROM_JUNIT_TO_KOTEST_REGEX to (DISABLE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.collections.shouldContainExactly"),
+            DISABLE_FROM_JUNIT_TO_KOTEST_REGEX to (DISABLE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import org.junit.jupiter.api.Disabled"),
             ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 to (ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 to "import io.kotest.matchers.shouldNotBe"),
             ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.shouldNotBe"),
             ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 to (ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 to "import io.kotest.matchers.shouldBe"),
@@ -141,10 +157,13 @@ class ConversionExpressions {
             ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 to "import io.kotest.matchers.shouldBe"),
             ASSERT_SAME_FROM_JUNIT_TO_KOTEST_REGEX1 to (ASSERT_SAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 to "import io.kotest.matchers.types.shouldBeSameInstanceAs"),
             ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.shouldBe"),
+            ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX2 to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT2 to "import io.kotest.matchers.shouldBe"),
             ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX1 to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 to "import io.kotest.matchers.shouldBe"),
             ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REPLACEMENT to "import io.kotest.matchers.string.shouldContain"),
             EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
+            EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX0 to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 to "import io.mockk.every"),
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.every"),
+            VERIFY_TIMES_FROM_MOCKITO_TO_MOCKK_REGEX to (VERIFY_TIMES_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify"),
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX0 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 to "import io.mockk.verify"),
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify"),
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to "import io.mockk.verify")
