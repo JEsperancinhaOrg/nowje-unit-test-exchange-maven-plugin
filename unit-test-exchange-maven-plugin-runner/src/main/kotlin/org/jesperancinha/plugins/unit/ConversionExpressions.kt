@@ -98,8 +98,8 @@ class ConversionExpressions {
         private const val ASSERT_NOTNULL_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1.shouldNotBeNull()"
 
         private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 =
-            Regex("Assert\\.assertEquals\\($CONSTANT_GROUP, $GENERIC_GROUP\\)")
-        private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$2 shouldBe \$1"
+            Regex("Assert\\.assertEquals\\($CONSTANT_GROUP,(\n*)(\\s*)$GENERIC_GROUP\\)")
+        private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$4 shouldBe \$1"
 
         private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX5 =
             Regex("Assert\\.assertEquals\\($GENERIC_GROUP, $CONSTANT_GROUP2::class\\.java\\)")
