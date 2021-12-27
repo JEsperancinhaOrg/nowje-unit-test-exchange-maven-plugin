@@ -215,8 +215,12 @@ class ConversionExpressions {
         private const val RULE_TEMP_FOLDER_FROM_JUNIT_REPLACEMENT = "val \$1 = createTempDirectory()"
 
         private val RULE_TEMP_FILE_FROM_JUNIT_REGEX =
-            Regex("$GENERIC_GROUP = $GENERIC_GROUP.newFile\\(\\)")
+            Regex("$GENERIC_GROUP = $GENERIC_GROUP\\.newFile\\(\\)")
         private const val RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT = "\$1 = \$2.createFile().toFile()"
+
+        private val RULE_TEMP_FILE_FROM_JUNIT_REGEX1 =
+            Regex("$GENERIC_GROUP = $GENERIC_GROUP\\.newFile\\((\"$GENERIC_GROUP\"|$VARIABLE_GROUP)\\)")
+        private const val RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT1 = "\$1 = Path(\$2.absolutePathString(), \$3).toFile()"
 
         private val KOTLIN_INJECTION_TEST_REGEX =
             Regex("(private )?(val|var) $GENERIC_GROUP: $GENERIC_GROUP\\? = null")
@@ -326,6 +330,7 @@ class ConversionExpressions {
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.verify")),
             RULE_TEMP_FOLDER_FROM_JUNIT_REGEX to (RULE_TEMP_FOLDER_FROM_JUNIT_REPLACEMENT to arrayOf("import kotlin.io.path.createTempDirectory")),
             RULE_TEMP_FILE_FROM_JUNIT_REGEX to (RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT to arrayOf("import kotlin.io.path.createFile")),
+            RULE_TEMP_FILE_FROM_JUNIT_REGEX1 to (RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT1 to emptyArray()),
             KOTLIN_INJECTION_TEST_REGEX to (KOTLIN_INJECTION_TEST_REPLACE to emptyArray()),
             ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeFalse")),
             ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeTrue")),

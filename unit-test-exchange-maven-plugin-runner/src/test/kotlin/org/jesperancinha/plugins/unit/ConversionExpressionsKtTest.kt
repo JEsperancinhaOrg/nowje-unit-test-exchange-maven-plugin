@@ -7,6 +7,25 @@ import org.junit.jupiter.api.Test
 internal class ConversionExpressionsKtTest {
 
     @Test
+    fun `should convert new file invocations`() {
+        val test = """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            val racoonFile = racoonFileCabinet.newFile(fileName)
+            val bonoboFile = bonoboFileCabinet.newFile()
+        """.trimIndent()
+
+        val processeTests = test.processTests
+        processeTests shouldBe """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            import kotlin.io.path.createFile
+            val racoonFile = Path(racoonFileCabinet.absolutePathString(), fileName).toFile()
+            val bonoboFile = bonoboFileCabinet.createFile().toFile()
+        """.trimIndent()
+    }
+
+    @Test
     fun `should convert invocation args mockito method`() {
         val test = """
             $PACKAGE
