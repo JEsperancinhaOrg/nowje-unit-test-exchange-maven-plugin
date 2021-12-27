@@ -260,6 +260,10 @@ class ConversionExpressions {
             Regex("$VARIABLE_GROUP\\.newFile\\($CONSTANT_GROUP\\)")
         private const val CORRECTION7_REPLACEMENT = "Path(\$1.absolutePathString(), \$2).createFile().toFile()"
 
+        private val CORRECTION8_REGEX =
+            Regex("$CONSTANT_GROUP2.root")
+        private const val CORRECTION8_REPLACEMENT = "\$1.root.toFile()"
+
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
             FAIL_FROM_JUNIT_TO_EXCEPTION_REGEX to (FAIL_FROM_JUNIT_TO_EXCEPTION_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
             ANY_STRING_REGEX to (ANY_STRING_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
@@ -322,7 +326,8 @@ class ConversionExpressions {
             ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeFalse")),
             ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeTrue")),
             ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REGEX to (ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REPLACEMENT to emptyArray()),
-            EVERY_THEN_WITH_INVOCATION_ARGS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THEN_WITH_INVOCATION_ARGS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.every")),
+            EVERY_THEN_WITH_INVOCATION_ARGS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THEN_WITH_INVOCATION_ARGS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf(
+                "import io.mockk.every")),
             CORRECTION1_REGEX to (CORRECTION1_REPLACEMENT to emptyArray()),
             CORRECTION2_REGEX to (CORRECTION2_REPLACEMENT to emptyArray()),
             CORRECTION3_REGEX to (CORRECTION3_REPLACEMENT to emptyArray()),
@@ -332,7 +337,8 @@ class ConversionExpressions {
                 "import kotlin.io.path.absolutePathString", "import kotlin.io.path.createDirectory")),
             CORRECTION7_REGEX to (CORRECTION7_REPLACEMENT to arrayOf("import kotlin.io.path.Path",
                 "import kotlin.io.path.absolutePathString", "import kotlin.io.path.createFile")),
-        )
+            CORRECTION8_REGEX to (CORRECTION8_REPLACEMENT to emptyArray()),
+            )
         private val IMPORT_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
             Regex("import org.junit.Before") to "import org.junit.jupiter.api.BeforeEach",
             Regex("import org.junit.Test") to "import org.junit.jupiter.api.Test",
