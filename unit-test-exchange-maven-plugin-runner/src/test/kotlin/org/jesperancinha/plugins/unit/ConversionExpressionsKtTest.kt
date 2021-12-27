@@ -4,7 +4,7 @@ import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 
-internal class ConversionExpressionsKtTest{
+internal class ConversionExpressionsKtTest {
 
     @Test
     fun `should return test shouldBeTrue`() {
@@ -25,7 +25,7 @@ internal class ConversionExpressionsKtTest{
     }
 
     @Test
-    fun `should generate test with right order shouldBe`(){
+    fun `should generate test with right order shouldBe`() {
         val test = """
             $PACKAGE
             import org.junit.Test
@@ -41,7 +41,7 @@ internal class ConversionExpressionsKtTest{
     }
 
     @Test
-    fun `should generate test from Rule`(){
+    fun `should generate test from Rule`() {
         val test = """
             $PACKAGE
             import org.junit.Test
@@ -64,7 +64,7 @@ internal class ConversionExpressionsKtTest{
     }
 
     @Test
-    fun `should convert to late init var`(){
+    fun `should convert to late init var`() {
         val test = """
             $PACKAGE
             import org.junit.jupiter.api.Test
@@ -82,7 +82,7 @@ internal class ConversionExpressionsKtTest{
     }
 
     @Test
-    fun `should convert expected Exception Test`(){
+    fun `should convert expected Exception Test`() {
         val test = """
             $PACKAGE
             import org.junit.jupiter.api.Test
@@ -104,8 +104,9 @@ internal class ConversionExpressionsKtTest{
             }
         """.trimIndent()
     }
+
     @Test
-    fun `should convert Mockito then answers`(){
+    fun `should convert Mockito then answers`() {
         val test = """
             $PACKAGE
             import org.junit.jupiter.api.Test
@@ -119,6 +120,27 @@ internal class ConversionExpressionsKtTest{
             import io.mockk.every
             every { racoonMock!!.create(nest!!) } answers { createMockNest(mockMaterials) }
         """.trimIndent()
+    }
+
+    @Test
+    fun `should convert answer implementation method`() {
+        val test = """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            private fun bonoboAnswer(name: String?): Answer<Bonobo> {
+                return Answer { invocation: InvocationOnMock? ->
+                    Bonobo(
+                         banana, game, clock))
+                }
+            }
+        """.trimIndent()
+
+        val processeTests = test.processTests
+        processeTests shouldBe """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            private fun bonoboAnswer(name: String?): Bonobo = Bonobo(banana, game, clock))
+            """.trimIndent()
     }
 
     companion object {

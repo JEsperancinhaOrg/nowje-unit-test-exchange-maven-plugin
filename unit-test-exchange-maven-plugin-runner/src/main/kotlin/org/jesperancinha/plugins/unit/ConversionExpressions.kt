@@ -212,6 +212,16 @@ class ConversionExpressions {
             Regex("(private )?val $GENERIC_GROUP: $GENERIC_GROUP\\? = null")
         private const val KOTLIN_INJECTION_TEST_REPLACE = "\$1lateinit var \$2: \$3"
 
+        private val ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REGEX =
+            Regex("(\\s)*(protected )?(private )?fun $GENERIC_GROUP\\($GENERIC_GROUP\\): Answer<$GENERIC_GROUP> \\{\n*" +
+                    "(\\s)*return Answer \\{ $GENERIC_GROUP: InvocationOnMock\\? ->\n*" +
+                    "(\\s)*$GENERIC_GROUP\\(\n*" +
+                    "(\\s)*$GENERIC_GROUP\\)\n*" +
+                    "(\\s)*}\n*" +
+                    "(\\s)*}")
+        private const val ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REPLACEMENT
+        = "\$1\$2\$3fun \$4(\$5): \$6 = $6(\$12)"
+
         private val CORRECTION1_REGEX =
             Regex("$GENERIC_GROUP shouldNotBe \\($GENERIC_GROUP\\)")
         private const val CORRECTION1_REPLACEMENT = "\$1 shouldNotBe \$2"
@@ -285,6 +295,7 @@ class ConversionExpressions {
             KOTLIN_INJECTION_TEST_REGEX to (KOTLIN_INJECTION_TEST_REPLACE to emptyArray()),
             ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeFalse")),
             ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeTrue")),
+            ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REGEX to (ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REPLACEMENT to emptyArray()),
             CORRECTION1_REGEX to (CORRECTION1_REPLACEMENT to emptyArray()),
             CORRECTION2_REGEX to (CORRECTION2_REPLACEMENT to emptyArray()),
             CORRECTION3_REGEX to (CORRECTION3_REPLACEMENT to emptyArray()),
