@@ -11,7 +11,7 @@ internal class ConversionExpressionsKtTest {
         val test = """
             $PACKAGE
             import org.junit.Test
-            Assert.assertTrue(RacoonsBonobos(raboSloppy, badMojo).racoonsBonobos!!.kanjer.isDom)
+            Assert.assertTrue(RacoonsBonobos(badRacoons, badMojo).racoonsBonobos!!.kanjer.isDom)
             """.trimIndent()
 
 
@@ -20,7 +20,7 @@ internal class ConversionExpressionsKtTest {
             $PACKAGE
             import org.junit.jupiter.api.Test
             import io.kotest.matchers.booleans.shouldBeTrue
-            RacoonsBonobos(raboSloppy, badMojo).racoonsBonobos!!.kanjer.isDom.shouldBeTrue()
+            RacoonsBonobos(badRacoons, badMojo).racoonsBonobos!!.kanjer.isDom.shouldBeTrue()
             """.trimIndent()
     }
 

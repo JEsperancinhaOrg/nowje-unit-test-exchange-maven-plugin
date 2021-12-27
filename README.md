@@ -2,18 +2,22 @@
 
 [![Status badge](https://img.shields.io/static/v1.svg?label=Status&message=Under%20Construction%20🚧&color=informational)](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin)
 
-This plugin works as a tool to convert unit tests from one standard to another. The goal is to support many times
+This plugin works as a tool to convert unit tests from one standard to another. The goal is to support conversion between many types of unit tests.
+Although the goal is to having it working flawlessly, it is actually, very hard to do it in practice. Think of this project as a helper if you want to convert between unit test, assertions and mock frameworks.
+This project will, however suffer multiple improvements as I go along, and so your input is very valuable and please feel free to open issues if you find bugs. I'm constantly trying to fix bugs I find and if I have yours, I can make this project event better for all of us.
 
 ## Release Dates
 
 --- Stand By ---
 
+There are no official dates planned yet. The code is still very experimental and there are no snapshots yet. You can, however, checkout the code already, compile it, and run it locally against your unit tests. The maven-plugin is not ready yet, but you can already try the runner. Check the [Readme.md](./unit-test-exchange-maven-plugin-runner/Readme.md) file on how to use it. I don't offer any guarantees though, so make sure to check the results before committing anything. Checkout the [Roadmap](./Roadmap.md) for more detais.
+
 ## Options
 
-| Option | Function                                                                                | Source Code |Target Code| Status        |
-|--------|-----------------------------------------------------------------------------------------|-------------|---|---------------|
-| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, JUpiter and Kotest assertions | Kotlin      |Kotlin| InDevelopment     |
-| 2      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, JUpiter and Kotest assertions | Java        |Kotlin| InDevelopment |
+| Option | Function                                                                                                                      | Source Code |Target Code| Status                                                                                               |
+|--------|-------------------------------------------------------------------------------------------------------------------------------|-------------|---|------------------------------------------------------------------------------------------------------|
+| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ, Wiremock Rules to MockK, Jupiter, Wiremock for Jupiter and Kotest assertions | Kotlin      |Kotlin| InDevelopment (Mostly working. Wiremock not available yet. Still buggy in some Mockito corner cases) |
+| 2      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, Jupiter and Kotest assertions                                       | Java        |Kotlin| On Hold                                                                                              |
 
 ## Before running this plugin
 
@@ -28,16 +32,18 @@ fun testThisStuff() {
 }
 ```
 
-3.  Make sure the source code and target code match the choice you make
+3.  Make sure that the source code and target code match the choice you make
 4.  Clean imports and make sure you removed all code not being used.
-5.  Remember to always have a space after a comma. This is usually standard and you don't have to think about this.\
+5.  Remember to always have a space after a comma. This is usually standard, and you don't have to think about this.
 
 ```kotlin
 Assert.assertThat(text, Matchers.containsString(test))
 ```
 
-6. Take special note on error messages. This converter does not keep the error messages in most cases. Frameworks like Kotest already describe with enough depth what happens to a test when it fails.
-7. There are no 100% guarantees that the resulting code will compile and run immediately after you run this. Manual intervention afterward may be necessary.
+6. Take special note on manually hard-coded error messages. This converter does not keep the error messages in most cases. Frameworks like Kotest already describe with enough depth what happens to a test when it fails. I will, however provide support for this in the future. (see table above)
+7. There are no 100% guarantees that the resulting code will compile and run immediately after you run this. Manual intervention afterwards may be necessary.
+8. Always check your code before committing. Check your SCM(GIT/SVN) for code errors. Compare the local version with the latest commit before making a new commit
+9. If there are compiling errors, make sure to fix them. If there are running errors make sure to fix that as well.
 
 ## Buy me a coffee
 

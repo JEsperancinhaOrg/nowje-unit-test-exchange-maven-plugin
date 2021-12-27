@@ -2,7 +2,9 @@
 
 ## How to run
 
-``````
+```
+java -jar unit-test-exchange-maven-plugin-runner.jar <option> <target-directory>
+```
 
 ## About me 👨🏽‍💻🚀🏳️‍🌈
 
