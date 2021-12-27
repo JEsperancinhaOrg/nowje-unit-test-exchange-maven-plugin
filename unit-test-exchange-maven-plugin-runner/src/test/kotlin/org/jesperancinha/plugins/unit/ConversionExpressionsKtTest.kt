@@ -143,6 +143,26 @@ internal class ConversionExpressionsKtTest {
             """.trimIndent()
     }
 
+    @Test
+    fun `should convert new Folder creation`() {
+        val test = """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            Mockito.`when`(bonono.camp).thenReturn(archive.newFolder("racoon"))
+        """.trimIndent()
+
+        val processeTests = test.processTests
+        processeTests shouldBe """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            import kotlin.io.path.createDirectory
+            import kotlin.io.path.absolutePathString
+            import kotlin.io.path.Path
+            import io.mockk.every
+            every { bonono.camp } returns Path(archive.absolutePathString(), "racoon").createDirectory().toFile()
+        """.trimIndent()
+    }
+
     companion object {
 
         const val PACKAGE = "package org.jesperancinha.plugins.unit"

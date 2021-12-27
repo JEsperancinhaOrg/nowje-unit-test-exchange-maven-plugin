@@ -219,8 +219,8 @@ class ConversionExpressions {
                     "(\\s)*$GENERIC_GROUP\\)\n*" +
                     "(\\s)*}\n*" +
                     "(\\s)*}")
-        private const val ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REPLACEMENT
-        = "\$1\$2\$3fun \$4(\$5): \$6 = $6(\$12)"
+        private const val ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REPLACEMENT =
+            "\$1\$2\$3fun \$4(\$5): \$6 = $6(\$12)"
 
         private val CORRECTION1_REGEX =
             Regex("$GENERIC_GROUP shouldNotBe \\($GENERIC_GROUP\\)")
@@ -237,6 +237,14 @@ class ConversionExpressions {
         private val CORRECTION4_REGEX =
             Regex("$GENERIC_GROUP\\.$GENERIC_GROUP\\.absolutePath\n")
         private const val CORRECTION4_REPLACEMENT = "\$1.\$2.absolutePathString()\n"
+
+        private val CORRECTION5_REGEX =
+            Regex("$GENERIC_GROUP\\.$GENERIC_GROUP\\.absolutePath\\)")
+        private const val CORRECTION5_REPLACEMENT = "\$1.\$2.absolutePathString()\\)"
+
+        private val CORRECTION6_REGEX =
+            Regex("$VARIABLE_GROUP\\.newFolder\\($CONSTANT_GROUP\\)")
+        private const val CORRECTION6_REPLACEMENT = "Path(\$1.absolutePathString(), \$2).createDirectory().toFile()"
 
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
             FAIL_FROM_JUNIT_TO_EXCEPTION_REGEX to (FAIL_FROM_JUNIT_TO_EXCEPTION_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
@@ -304,6 +312,9 @@ class ConversionExpressions {
             CORRECTION2_REGEX to (CORRECTION2_REPLACEMENT to emptyArray()),
             CORRECTION3_REGEX to (CORRECTION3_REPLACEMENT to emptyArray()),
             CORRECTION4_REGEX to (CORRECTION4_REPLACEMENT to arrayOf("import kotlin.io.path.absolutePathString")),
+            CORRECTION5_REGEX to (CORRECTION5_REPLACEMENT to arrayOf("import kotlin.io.path.absolutePathString")),
+            CORRECTION6_REGEX to (CORRECTION6_REPLACEMENT to arrayOf("import kotlin.io.path.Path",
+                "import kotlin.io.path.absolutePathString", "import kotlin.io.path.createDirectory")),
         )
         private val IMPORT_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
             Regex("import org.junit.Before") to "import org.junit.jupiter.api.BeforeEach",
@@ -377,7 +388,7 @@ class ConversionExpressions {
                         val j = getStartOfInstructionIndex(stringList, i - 1)
                         val sb = StringBuilder()
                         sb.append(stringList.removeAt(j))
-                        for (k in j until i-1) {
+                        for (k in j until i - 1) {
                             sb.append(stringList.removeAt(j).trim())
                         }
                         val toString = sb.toString()
