@@ -63,6 +63,48 @@ internal class ConversionExpressionsKtTest{
         """.trimIndent()
     }
 
+    @Test
+    fun `should convert to late init var`(){
+        val test = """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            val racoonService: RacoonService? = null
+            private val bonoboService: BonoboService? = null
+        """.trimIndent()
+
+        val processeTests = test.processTests
+        processeTests shouldBe """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            lateinit var racoonService: RacoonService
+            private lateinit var bonoboService: BonoboService
+        """.trimIndent()
+    }
+
+    @Test
+    fun `should convert expected Exception Test`(){
+        val test = """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            @Test(expected = CreationException::class)
+            fun testCreateParkFailTest() {
+                createRacoonWildPark().doItNow(
+                    now)
+            }
+        """.trimIndent()
+
+        val processeTests = test.processTests
+        processeTests shouldBe """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            import io.kotest.assertions.throwables.shouldThrow
+            @Test
+            fun testCreateParkFailTest() {
+                shouldThrow<CreationException> { createRacoonWildPark().doItNow(now) }
+            }
+        """.trimIndent()
+    }
+
     companion object {
 
         const val PACKAGE = "package org.jesperancinha.plugins.unit"

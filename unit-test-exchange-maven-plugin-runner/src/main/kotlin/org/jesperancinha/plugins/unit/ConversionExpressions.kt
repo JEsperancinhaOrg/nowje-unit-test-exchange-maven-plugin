@@ -204,6 +204,10 @@ class ConversionExpressions {
             Regex("$GENERIC_GROUP = $GENERIC_GROUP.newFile\\(\\)")
         private const val RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT = "\$1 = \$2.createFile().toFile()"
 
+        private val KOTLIN_INJECTION_TEST_REGEX =
+            Regex("(private )?val $GENERIC_GROUP: $GENERIC_GROUP\\? = null")
+        private const val KOTLIN_INJECTION_TEST_REPLACE = "\$1lateinit var \$2: \$3"
+
         private val CORRECTION1_REGEX =
             Regex("$GENERIC_GROUP shouldNotBe \\($GENERIC_GROUP\\)")
         private const val CORRECTION1_REPLACEMENT = "\$1 shouldNotBe \$2"
@@ -273,6 +277,7 @@ class ConversionExpressions {
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.verify")),
             RULE_TEMP_FOLDER_FROM_JUNIT_REGEX to (RULE_TEMP_FOLDER_FROM_JUNIT_REPLACEMENT to arrayOf("import kotlin.io.path.createTempDirectory")),
             RULE_TEMP_FILE_FROM_JUNIT_REGEX to (RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT to arrayOf("import kotlin.io.path.createFile")),
+            KOTLIN_INJECTION_TEST_REGEX to (KOTLIN_INJECTION_TEST_REPLACE to emptyArray()),
             ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeFalse")),
             ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeTrue")),
             CORRECTION1_REGEX to (CORRECTION1_REPLACEMENT to emptyArray()),
@@ -348,14 +353,63 @@ class ConversionExpressions {
                         '}' -> count--
                     }
                     if (change && count == 0) {
-                        val trimmedOldText = stringList[i - 1].trim()
-                        stringList[i - 1] =
-                            stringList[i - 1].replace(trimmedOldText, "shouldThrow<$className> { $trimmedOldText }")
+                        val j = getStartOfInstructionIndex(stringList, i - 1)
+                        val sb = StringBuilder()
+                        sb.append(stringList.removeAt(j))
+                        for (k in j until i-1) {
+                            sb.append(stringList.removeAt(j).trim())
+                        }
+                        val toString = sb.toString()
+                        val trimmedOldText = toString.trim()
+                        stringList.add(j,
+                            toString.replace(trimmedOldText, "shouldThrow<$className> { $trimmedOldText }"))
                         return stringList
                     }
                 }
             }
             return stringList
+        }
+
+        private fun getStartOfInstructionIndex(stringList: MutableList<String>, startingPoint: Int): Int {
+            var parCount = 0
+            var maybe = false
+            var valCharCheck = ' '
+            var i = startingPoint
+            while (i in 0..startingPoint) {
+                val substring = stringList[i]
+                val subStringLength = substring.length - 1
+                var j = subStringLength
+                while (j in 0..subStringLength) {
+                    val currentChar = substring[j]
+                    if (currentChar == ')') {
+                        parCount++
+                    }
+                    if (currentChar == '(') {
+                        parCount--
+                    }
+                    if (maybe && currentChar != '.' && parCount == 0) {
+                        return i
+                    }
+
+                    maybe = parCount == 0 && (currentChar == ' ' || currentChar == '\n')
+
+                    if (valCharCheck == ' ' && currentChar == 'l') {
+                        valCharCheck = currentChar
+                    } else if (valCharCheck == 'l' && currentChar == 'a') {
+                        valCharCheck = currentChar
+                    } else if (valCharCheck == 'a' && currentChar == 'v') {
+                        valCharCheck = currentChar
+                    } else valCharCheck = currentChar
+
+                    if (valCharCheck == 'v') {
+                        return i
+                    }
+                    j--
+                }
+                i--
+            }
+            return startingPoint
+
         }
 
 
