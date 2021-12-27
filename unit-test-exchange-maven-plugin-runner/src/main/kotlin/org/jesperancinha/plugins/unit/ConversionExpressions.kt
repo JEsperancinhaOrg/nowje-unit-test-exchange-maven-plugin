@@ -209,8 +209,8 @@ class ConversionExpressions {
         private const val RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT = "\$1 = \$2.createFile().toFile()"
 
         private val KOTLIN_INJECTION_TEST_REGEX =
-            Regex("(private )?val $GENERIC_GROUP: $GENERIC_GROUP\\? = null")
-        private const val KOTLIN_INJECTION_TEST_REPLACE = "\$1lateinit var \$2: \$3"
+            Regex("(private )?(val|var) $GENERIC_GROUP: $GENERIC_GROUP\\? = null")
+        private const val KOTLIN_INJECTION_TEST_REPLACE = "\$1lateinit var \$3: \$4"
 
         private val ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REGEX =
             Regex("(\\s)*(protected )?(private )?fun $GENERIC_GROUP\\($GENERIC_GROUP\\): Answer<$GENERIC_GROUP> \\{\n*" +
