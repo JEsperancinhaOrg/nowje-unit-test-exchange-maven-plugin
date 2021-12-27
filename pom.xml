@@ -5,11 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.jesperancinha.plugins</groupId>
-    <artifactId>unit-test-exchange-maven-plugin</artifactId>
+    <artifactId>unit-test-exchange-maven-plugin-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>unit-test-exchange-maven-plugin-runner</module>
     </modules>
+
+    <name>Unit Test Exchange Maven Plugin Parent</name>
 
     <packaging>pom</packaging>
 </project>
