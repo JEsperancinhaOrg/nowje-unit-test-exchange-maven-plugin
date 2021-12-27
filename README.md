@@ -10,7 +10,7 @@ This project will, however suffer multiple improvements as I go along, and so yo
 
 --- Stand By ---
 
-There are no official dates planned yet. The code is still very experimental and there are no snapshots yet. You can, however, checkout the code already, compile it, and run it locally against your unit tests. The maven-plugin is not ready yet, but you can already try the runner. Check the [Readme.md](./unit-test-exchange-maven-plugin-runner/Readme.md) file on how to use it. I don't offer any guarantees though, so make sure to check the results before committing anything. Checkout the [Roadmap](./Roadmap.md) for more detais.
+There are no official dates planned yet. The code is still very experimental and there are no snapshots yet. You can, however, checkout the code already, compile it, and run it locally against your unit tests. The maven-plugin is not ready yet, but you can already try the runner. Check the [Readme.md](./unit-test-exchange-maven-plugin-runner/Readme.md) file on how to use it. I don't offer any guarantees at this point though, so make sure to check the results before committing anything. Checkout the [Roadmap](./Roadmap.md) for more detais.
 
 ## Options
 
