@@ -6,12 +6,14 @@ package org.jesperancinha.plugins.unit
  */
 class ConversionExpressions {
     companion object {
+        private const val GENERIC_SEARCH_CHARACTERS2 = "0-9a-zA-Z_\\-\":,/\\.\\!\\[\\]\\+<>{}#\\?\\\\\\$"
         private const val GENERIC_SEARCH_CHARACTERS = "0-9a-zA-Z(_\\-\":,/\\.)\\!\\[\\]\\+<>{}#\\?\\\\\\$"
         private const val GENERIC_SEARCH_CHARACTERS_AND_SPACE = "$GENERIC_SEARCH_CHARACTERS "
         private const val GENERIC_GROUP_ALL = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*)"
         private const val GENERIC_GROUP = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*[$GENERIC_SEARCH_CHARACTERS]+)"
         private const val GENERIC_GROUP_ESCAPE_CHARS = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE`]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n]*)"
+        private const val GENERIC_GROUP_WITH_NEWLINE2 = "([$GENERIC_SEARCH_CHARACTERS2\\n ]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n\\*]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE_EQUALS = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n\\=]*)"
         private const val GENERIC_GROUP_WITH_STAR = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\*]*)"
@@ -124,7 +126,7 @@ class ConversionExpressions {
         private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 = "\$1 shouldBe \$2"
 
         private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX2 =
-            Regex("Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP_WITH_NEWLINE\\)")
+            Regex("Assert\\.assertEquals\\($GENERIC_GROUP, \\($GENERIC_GROUP_WITH_NEWLINE2\\)")
         private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT2 = "\$2 shouldBe \$1"
 
         private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX3 =
@@ -150,6 +152,10 @@ class ConversionExpressions {
         private val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenReturn\\($GENERIC_GROUP\\)")
         private const val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "every { \$1 } returns \$4"
+
+        private val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX1 =
+            Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenReturn\\($GENERIC_GROUP_WITH_NEWLINE\\)")
+        private const val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 = "every { \$1 } returns \$4"
 
         private val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX0 =
             Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenThrow\\((\n)?(\\s*)?$GENERIC_GROUP::class\\.java\\)")
@@ -326,6 +332,7 @@ class ConversionExpressions {
                 "import io.kotest.matchers.string.shouldContain")),
             EVERY_THEN_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THEN_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.every")),
             EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.every")),
+            EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX1 to (EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 to arrayOf("import io.mockk.every")),
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX0 to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 to arrayOf("import io.mockk.every",
                 "import io.mockk.mockk")),
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.every")),
@@ -372,6 +379,7 @@ class ConversionExpressions {
             Regex("import org.mockito.ArgumentCaptor(;)?\n") to "",
             Regex("import org.junit.Rule(;)?\n") to "",
             Regex("import org.junit.rules.TemporaryFolder(;)?\n") to "",
+            Regex("(\\s*)Mockito.verifyNoMoreInteractions\\($GENERIC_GROUP\\)(;)?\n") to "",
         )
 
         private val ANNOTATIONS_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
