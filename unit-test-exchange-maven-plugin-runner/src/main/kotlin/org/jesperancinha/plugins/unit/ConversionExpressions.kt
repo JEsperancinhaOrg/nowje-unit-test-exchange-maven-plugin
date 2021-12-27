@@ -12,6 +12,7 @@ class ConversionExpressions {
         private const val GENERIC_GROUP = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*[$GENERIC_SEARCH_CHARACTERS]+)"
         private const val GENERIC_GROUP_WITH_NEWLINE = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n\\*]*)"
+        private const val GENERIC_GROUP_WITH_NEWLINE_EQUALS = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n\\=]*)"
         private const val GENERIC_GROUP_WITH_STAR = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\*]*)"
         private const val CONSTANT_GROUP = "(\"[$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*\"|[0-9]*|[A-Z_]*)"
         private const val CONSTANT_GROUP1 = "(([A-Z]+[a-z]*(\\.)?)*)"
@@ -161,6 +162,15 @@ class ConversionExpressions {
                     "(\\s*)Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP::class\\.java\\)\n" +
                     "(\\s*)}")
         private const val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 = "\$1shouldThrow<\$11> { \$3 }"
+
+        private val EVERY_THEN_WITH_INVOCATION_ARGS_FROM_MOCKITO_TO_MOCKK_REGEX =
+            Regex("Mockito.`when`\\($GENERIC_GROUP\\)\\.then(\\s*)\\{(\\s*)$VARIABLE_GROUP(\\s*)->\n" +
+                    "(\\s*)(val|var) $VARIABLE_GROUP = $VARIABLE_GROUP\\.arguments\\[$CONSTANT_GROUP]\\.toString\\(\\)\n" +
+                    GENERIC_GROUP_WITH_NEWLINE_EQUALS)
+        private const val EVERY_THEN_WITH_INVOCATION_ARGS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT =
+            "every { \$1 } answers {\n" +
+                    "\$6\$7 \$8 = it.invocation.args[\$10].toString()\n" +
+                    "\$11"
 
         private val VERIFY_ATLEAST_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito.verify\\($GENERIC_GROUP, Mockito\\.atLeast\\($GENERIC_GROUP\\)\\)(\n)?(\\s)*\\.$GENERIC_GROUP_ALL")
@@ -312,6 +322,7 @@ class ConversionExpressions {
             ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeFalse")),
             ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeTrue")),
             ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REGEX to (ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REPLACEMENT to emptyArray()),
+            EVERY_THEN_WITH_INVOCATION_ARGS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THEN_WITH_INVOCATION_ARGS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.every")),
             CORRECTION1_REGEX to (CORRECTION1_REPLACEMENT to emptyArray()),
             CORRECTION2_REGEX to (CORRECTION2_REPLACEMENT to emptyArray()),
             CORRECTION3_REGEX to (CORRECTION3_REPLACEMENT to emptyArray()),

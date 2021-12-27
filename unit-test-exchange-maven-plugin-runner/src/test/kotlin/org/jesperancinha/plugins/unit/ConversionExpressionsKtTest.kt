@@ -7,6 +7,32 @@ import org.junit.jupiter.api.Test
 internal class ConversionExpressionsKtTest {
 
     @Test
+    fun `should convert invocation args mockito method`() {
+        val test = """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            Mockito.`when`(bananaService.getPackagePerRef(ArgumentMatchers.anyString())).then { invocation ->
+                val crates = invocation.arguments[0].toString()
+                val bananas = openCrates(crates)
+                Contents(crates, bananas, nBonobos)
+            }
+        """.trimIndent()
+
+        val processeTests = test.processTests
+        processeTests shouldBe """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            import io.mockk.every
+            import io.kotest.assertions.any
+            every { bananaService.getPackagePerRef(any<String>()) } answers {
+                val crates = it.invocation.args[0].toString()
+                val bananas = openCrates(crates)
+                Contents(crates, bananas, nBonobos)
+            }
+        """.trimIndent()
+    }
+
+    @Test
     fun `should return test shouldBeTrue`() {
         val test = """
             $PACKAGE
