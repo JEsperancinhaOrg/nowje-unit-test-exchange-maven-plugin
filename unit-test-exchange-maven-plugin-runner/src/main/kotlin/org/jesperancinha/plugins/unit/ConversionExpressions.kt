@@ -10,6 +10,7 @@ class ConversionExpressions {
         private const val GENERIC_SEARCH_CHARACTERS_AND_SPACE = "$GENERIC_SEARCH_CHARACTERS "
         private const val GENERIC_GROUP_ALL = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*)"
         private const val GENERIC_GROUP = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*[$GENERIC_SEARCH_CHARACTERS]+)"
+        private const val GENERIC_GROUP_ESCAPE_CHARS = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE`]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n\\*]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE_EQUALS = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n\\=]*)"
@@ -114,6 +115,10 @@ class ConversionExpressions {
             Regex("Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
         private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldBe \$2"
 
+        private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX6 =
+            Regex("Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP_ESCAPE_CHARS\\)")
+        private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT6 = "\$2 shouldBe \$1"
+
         private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX1 =
             Regex("assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP\\)")
         private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 = "\$1 shouldBe \$2"
@@ -195,8 +200,8 @@ class ConversionExpressions {
         private val REPLACE_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected = $GENERIC_GROUP::class\\)")
 
         private val ANY_TYPE_REGEX =
-            Regex("ArgumentMatchers\\.any\\((\n)?(\\s*)?$GENERIC_GROUP::class\\.java\\)")
-        private const val ANY_TYPE_REPLACEMENT = "any<\$3>()"
+            Regex("(ArgumentMatchers|Mockito)\\.any\\((\n)?(\\s*)?$GENERIC_GROUP::class\\.java\\)")
+        private const val ANY_TYPE_REPLACEMENT = "any<\$4>()"
 
         private val ANY_STRING_REGEX =
             Regex("ArgumentMatchers.anyString\\(\\)")
@@ -316,6 +321,7 @@ class ConversionExpressions {
             ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.shouldBe")),
             ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX2 to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT2 to arrayOf("import io.kotest.matchers.shouldBe")),
             ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX1 to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 to arrayOf("import io.kotest.matchers.shouldBe")),
+            ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX6 to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT6 to arrayOf("import io.kotest.matchers.shouldBe")),
             ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf(
                 "import io.kotest.matchers.string.shouldContain")),
             EVERY_THEN_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THEN_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.every")),
@@ -348,7 +354,7 @@ class ConversionExpressions {
                 "import kotlin.io.path.absolutePathString", "import kotlin.io.path.createFile")),
             CORRECTION8_REGEX to (CORRECTION8_REPLACEMENT to emptyArray()),
             CORRECTION9_REGEX to (CORRECTION9_REPLACEMENT to emptyArray()),
-            )
+        )
         private val IMPORT_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
             Regex("import org.junit.Before") to "import org.junit.jupiter.api.BeforeEach",
             Regex("import org.junit.Test") to "import org.junit.jupiter.api.Test",
