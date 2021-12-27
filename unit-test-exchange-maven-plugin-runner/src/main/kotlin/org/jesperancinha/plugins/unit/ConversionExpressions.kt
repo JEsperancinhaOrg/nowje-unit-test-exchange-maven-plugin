@@ -246,6 +246,10 @@ class ConversionExpressions {
             Regex("$VARIABLE_GROUP\\.newFolder\\($CONSTANT_GROUP\\)")
         private const val CORRECTION6_REPLACEMENT = "Path(\$1.absolutePathString(), \$2).createDirectory().toFile()"
 
+        private val CORRECTION7_REGEX =
+            Regex("$VARIABLE_GROUP\\.newFile\\($CONSTANT_GROUP\\)")
+        private const val CORRECTION7_REPLACEMENT = "Path(\$1.absolutePathString(), \$2).createFile().toFile()"
+
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
             FAIL_FROM_JUNIT_TO_EXCEPTION_REGEX to (FAIL_FROM_JUNIT_TO_EXCEPTION_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
             ANY_STRING_REGEX to (ANY_STRING_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
@@ -315,6 +319,8 @@ class ConversionExpressions {
             CORRECTION5_REGEX to (CORRECTION5_REPLACEMENT to arrayOf("import kotlin.io.path.absolutePathString")),
             CORRECTION6_REGEX to (CORRECTION6_REPLACEMENT to arrayOf("import kotlin.io.path.Path",
                 "import kotlin.io.path.absolutePathString", "import kotlin.io.path.createDirectory")),
+            CORRECTION7_REGEX to (CORRECTION7_REPLACEMENT to arrayOf("import kotlin.io.path.Path",
+                "import kotlin.io.path.absolutePathString", "import kotlin.io.path.createFile")),
         )
         private val IMPORT_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
             Regex("import org.junit.Before") to "import org.junit.jupiter.api.BeforeEach",
