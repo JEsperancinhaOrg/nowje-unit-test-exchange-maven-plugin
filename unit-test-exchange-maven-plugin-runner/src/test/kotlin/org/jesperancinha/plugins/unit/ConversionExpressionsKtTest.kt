@@ -7,6 +7,25 @@ import org.junit.jupiter.api.Test
 internal class ConversionExpressionsKtTest {
 
     @Test
+    fun `should convert returns`() {
+        val test = """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            Mockito.`when`(racoons.eatFromTrash()).thenReturn(Bonobos.getUpset(
+                racoonResources.pickUp()))
+        """.trimIndent()
+
+        val processeTests = test.processTests
+        processeTests shouldBe """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            import io.mockk.every
+            every { racoons.eatFromTrash() } returns Bonobos.getUpset(
+                racoonResources.pickUp())
+        """.trimIndent()
+    }
+
+    @Test
     fun `should convert new file invocations`() {
         val test = """
             $PACKAGE
