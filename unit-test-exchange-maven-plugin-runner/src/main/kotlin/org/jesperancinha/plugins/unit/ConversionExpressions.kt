@@ -13,7 +13,7 @@ class ConversionExpressions {
         private const val GENERIC_GROUP = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE]*[$GENERIC_SEARCH_CHARACTERS]+)"
         private const val GENERIC_GROUP_ESCAPE_CHARS = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE`]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n]*)"
-        private const val GENERIC_GROUP_WITH_NEWLINE2 = "([$GENERIC_SEARCH_CHARACTERS2\\n ]*)"
+        private const val GENERIC_GROUP_WITH_NEWLINE2 = "([$GENERIC_SEARCH_CHARACTERS2\\n (]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE_STAR = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n\\*]*)"
         private const val GENERIC_GROUP_WITH_NEWLINE_EQUALS = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\n\\=]*)"
         private const val GENERIC_GROUP_WITH_STAR = "([$GENERIC_SEARCH_CHARACTERS_AND_SPACE\\*]*)"
@@ -126,7 +126,7 @@ class ConversionExpressions {
         private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 = "\$1 shouldBe \$2"
 
         private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX2 =
-            Regex("Assert\\.assertEquals\\($GENERIC_GROUP, \\($GENERIC_GROUP_WITH_NEWLINE2\\)")
+            Regex("Assert\\.assertEquals\\($GENERIC_GROUP, $GENERIC_GROUP_WITH_NEWLINE\\)")
         private const val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT2 = "\$2 shouldBe \$1"
 
         private val ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX3 =
@@ -154,7 +154,7 @@ class ConversionExpressions {
         private const val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "every { \$1 } returns \$4"
 
         private val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX1 =
-            Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenReturn\\($GENERIC_GROUP_WITH_NEWLINE\\)")
+            Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenReturn\\($GENERIC_GROUP_WITH_NEWLINE2\\)")
         private const val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 = "every { \$1 } returns \$4"
 
         private val EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX0 =
