@@ -45,6 +45,11 @@ Assert.assertThat(text, Matchers.containsString(test))
 8. Always check your code before committing. Check your SCM(GIT/SVN) for code errors. Compare the local version with the latest commit before making a new commit
 9. If there are compiling errors, make sure to fix them. If there are running errors make sure to fix that as well.
 
+## FAQ
+
+1. <b>Why did you built this in a hardcoded way? Wouldn't it be better to have a configuration file and use that with a Regex expression list?</b>   
+R. Short answer to this question is because it is not useful. A Long answer is much more complicated than that. This engine is implemented with search and replace functions which made heavy usage of ReGex expression. This demands processing time and for the most part it is a very reliable process. Not very efficient, but very reliable. However, the sequence of regular expressions change the code per executed expression. Some search expressions require extra processing such as the case of migrating a `shouldThrow` from annotated unit tests. On the other hand I'm developing with this project a reliable way to convert unit tests to whatever version you want them to be converted. This is especially useful for companies that want to update their code, have thousands of lines written in JUnit 3 and 4 and now want to move on to other frameworks like Kotest, Jupiter 5 or even Kotest engine, just to name a few. Making this reliable is a major concern for mine in this project. This implies the implementation of unit, integration and regression tests which will test if the sequence of regular expressions and the code processing on the fly works as it is meant to be. Allowing external configurations would get in the way of achieving an increasing reliability for every release.
+
 ## Buy me a coffee
 
 I hope you enjoyed this repository. If you did, you can optionally please buy me a coffee, which supports me to constantly improve and make new free content regularly for everyone. Thank you so much!
