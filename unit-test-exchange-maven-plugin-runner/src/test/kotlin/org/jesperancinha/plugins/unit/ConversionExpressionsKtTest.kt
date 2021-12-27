@@ -104,6 +104,22 @@ internal class ConversionExpressionsKtTest{
             }
         """.trimIndent()
     }
+    @Test
+    fun `should convert Mockito then answers`(){
+        val test = """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            Mockito.`when`(racoonMock!!.create(nest!!)).then(createMockNest(mockMaterials))
+        """.trimIndent()
+
+        val processeTests = test.processTests
+        processeTests shouldBe """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            import io.mockk.every
+            every { racoonMock!!.create(nest!!) } answers { createMockNest(mockMaterials) }
+        """.trimIndent()
+    }
 
     companion object {
 

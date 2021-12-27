@@ -137,6 +137,10 @@ class ConversionExpressions {
             Regex("Assert\\.assertThat\\($GENERIC_GROUP, Matchers.containsString\\($GENERIC_GROUP\\)\\)")
         private const val ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldContain \$2"
 
+        private val EVERY_THEN_FROM_MOCKITO_TO_MOCKK_REGEX =
+            Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.then\\($GENERIC_GROUP\\)")
+        private const val EVERY_THEN_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "every { \$1 } answers { \$4 }"
+
         private val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX =
             Regex("Mockito\\.`when`\\($GENERIC_GROUP\\)(\n)?(\\s*)?\\.thenReturn\\($GENERIC_GROUP\\)")
         private const val EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT = "every { \$1 } returns \$4"
@@ -266,6 +270,7 @@ class ConversionExpressions {
             ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX1 to (ASSERT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT1 to arrayOf("import io.kotest.matchers.shouldBe")),
             ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_CONTAINS_STRING_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf(
                 "import io.kotest.matchers.string.shouldContain")),
+            EVERY_THEN_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THEN_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.every")),
             EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_TRUE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.every")),
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX0 to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT0 to arrayOf("import io.mockk.every",
                 "import io.mockk.mockk")),
