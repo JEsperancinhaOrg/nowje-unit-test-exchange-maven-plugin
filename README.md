@@ -2,6 +2,11 @@
 
 [![Status badge](https://img.shields.io/static/v1.svg?label=Status&message=Under%20Construction%20🚧&color=informational)](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin)
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c06e3239fe15454b9c415003cad928e5)](https://www.codacy.com/gh/JEsperancinhaOrg/unit-test-exchange-maven-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JEsperancinhaOrg/unit-test-exchange-maven-plugin&amp;utm_campaign=Badge_Grade)
+
+[![Coverage Status](https://coveralls.io/repos/github/JEsperancinhaOrg/unit-test-exchange-maven-plugin/badge.svg?branch=main)](https://coveralls.io/github/JEsperancinhaOrg/unit-test-exchange-maven-plugin?branch=main)
+[![codecov](https://codecov.io/gh/JEsperancinhaOrg/unit-test-exchange-maven-plugin/branch/main/graph/badge.svg?token=Zy8Z6jcYW0)](https://codecov.io/gh/JEsperancinhaOrg/unit-test-exchange-maven-plugin)
+
 This plugin works as a tool to convert unit tests from one standard to another. The goal is to support conversion between many types of unit tests.
 Although the goal is to having it working flawlessly, it is actually, very hard to do it in practice. Think of this project as a helper if you want to convert between unit test, assertions and mock frameworks.
 This project will, however suffer multiple improvements as I go along, and so your input is very valuable and please feel free to open issues if you find bugs. I'm constantly trying to fix bugs I find and if I have yours, I can make this project event better for all of us.
@@ -14,10 +19,10 @@ There are no official dates planned yet. The code is still very experimental and
 
 ## Options
 
-| Option | Function                                                                                                                      | Source Code |Target Code| Status                                                                                               |
-|--------|-------------------------------------------------------------------------------------------------------------------------------|-------------|---|------------------------------------------------------------------------------------------------------|
-| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ, Wiremock Rules to MockK, Jupiter, Wiremock for Jupiter and Kotest assertions | Kotlin      |Kotlin| InDevelopment (Mostly working. Wiremock not available yet. Still buggy in some Mockito corner cases) |
-| 2      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, Jupiter and Kotest assertions                                       | Java        |Kotlin| On Hold                                                                                              |
+| Option | Function                                                                                                                      | Source Code |Target Code| Status                                                                                               | Manuals               |
+|--------|-------------------------------------------------------------------------------------------------------------------------------|-------------|---|------------------------------------------------------------------------------------------------------|-----------------------|
+| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ, Wiremock Rules to MockK, Jupiter, Wiremock for Jupiter and Kotest assertions | Kotlin      |Kotlin| InDevelopment (Mostly working. Wiremock not available yet. Still buggy in some Mockito corner cases) | [Option 1 Manual](./) |
+| 2      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, Jupiter and Kotest assertions                                       | Java        |Kotlin| On Hold                                                                                              | N/A                   |
 
 ## Before running this plugin
 
