@@ -7,6 +7,36 @@ import org.junit.jupiter.api.Test
 internal class ConversionExpressionsKtTest {
 
     @Test
+    fun `should make imports unique`() {
+        val test = """
+                $PACKAGE
+                import io.kotest.matchers.shouldBe
+                import io.kotest.matchers.shouldBe
+                import io.kotest.matchers.nulls.shouldBeNull
+                import io.kotest.matchers.shouldBe
+                import io.kotest.matchers.shouldNotBe
+                import org.junit.jupiter.api.Disabled
+                import io.kotest.matchers.collections.shouldContainExactly
+                import io.kotest.assertions.throwables.shouldThrow
+                import org.junit.jupiter.api.Test
+                
+                anything
+            """.trimIndent()
+        val processTests = test.processTests
+        processTests shouldBe """
+            $PACKAGE
+            import io.kotest.assertions.throwables.shouldThrow
+            import io.kotest.matchers.collections.shouldContainExactly
+            import io.kotest.matchers.nulls.shouldBeNull
+            import io.kotest.matchers.shouldBe
+            import io.kotest.matchers.shouldNotBe
+            import org.junit.jupiter.api.Disabled
+            import org.junit.jupiter.api.Test
+            
+            anything
+        """.trimIndent()
+    }
+    @Test
     fun `should convert slot variables from loops to single usage`() {
         val test = """
                 $PACKAGE
@@ -32,6 +62,7 @@ internal class ConversionExpressionsKtTest {
             }
         """.trimIndent()
     }
+
     @Test
     fun `should convert wiremock declarations`() {
         val test = """
@@ -44,9 +75,9 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import org.junit.jupiter.api.Test
-            import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
             import com.github.tomakehurst.wiremock.WireMockServer
+            import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
+            import org.junit.jupiter.api.Test
             var racoonsSever = WireMockServer(options().port(WIREMOCK_PORT))
         """.trimIndent()
     }
@@ -63,8 +94,8 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import org.junit.jupiter.api.Test
             import io.mockk.every
+            import org.junit.jupiter.api.Test
             every { racoons.eatFromTrash() } returns Bonobos.getUpset(
                 racoonResources.pickUp())
         """.trimIndent()
@@ -82,8 +113,8 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import org.junit.jupiter.api.Test
             import kotlin.io.path.createFile
+            import org.junit.jupiter.api.Test
             val racoonFile = Path(racoonFileCabinet.absolutePathString(), fileName).toFile()
             val bonoboFile = bonoboFileCabinet.createFile().toFile()
         """.trimIndent()
@@ -104,9 +135,9 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import org.junit.jupiter.api.Test
-            import io.mockk.every
             import io.kotest.assertions.any
+            import io.mockk.every
+            import org.junit.jupiter.api.Test
             every { bananaService.getPackagePerRef(any<String>()) } answers {
                 val crates = it.invocation.args[0].toString()
                 val bananas = openCrates(crates)
@@ -127,8 +158,8 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import org.junit.jupiter.api.Test
             import io.kotest.matchers.booleans.shouldBeTrue
+            import org.junit.jupiter.api.Test
             RacoonsBonobos(badRacoons, badMojo).racoonsBonobos!!.kanjer.isDom.shouldBeTrue()
             """.trimIndent()
     }
@@ -143,8 +174,8 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import org.junit.jupiter.api.Test
             import io.kotest.matchers.shouldBe
+            import org.junit.jupiter.api.Test
             ex.cause!!.javaClass shouldBe GoodException::class.java
         """.trimIndent()
     }
@@ -164,9 +195,9 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import org.junit.jupiter.api.Test
             import kotlin.io.path.createFile
             import kotlin.io.path.createTempDirectory
+            import org.junit.jupiter.api.Test
             val wilderness = createTempDirectory()
             bonobo = wilderness.createFile().toFile()
         """.trimIndent()
@@ -205,8 +236,8 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import org.junit.jupiter.api.Test
             import io.kotest.assertions.throwables.shouldThrow
+            import org.junit.jupiter.api.Test
             @Test
             fun testCreateParkFailTest() {
                 shouldThrow<CreationException> { createRacoonWildPark().doItNow(now) }
@@ -225,8 +256,8 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import org.junit.jupiter.api.Test
             import io.mockk.every
+            import org.junit.jupiter.api.Test
             every { racoonMock!!.create(nest!!) } answers { createMockNest(mockMaterials) }
         """.trimIndent()
     }
@@ -263,11 +294,11 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import org.junit.jupiter.api.Test
-            import kotlin.io.path.createDirectory
-            import kotlin.io.path.absolutePathString
-            import kotlin.io.path.Path
             import io.mockk.every
+            import kotlin.io.path.Path
+            import kotlin.io.path.absolutePathString
+            import kotlin.io.path.createDirectory
+            import org.junit.jupiter.api.Test
             every { bonono.camp } returns Path(archive.absolutePathString(), "racoon").createDirectory().toFile()
         """.trimIndent()
     }

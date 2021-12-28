@@ -407,7 +407,22 @@ class ConversionExpressions {
             { text: String -> processAssertionsFindReplaceImport(text) },
             { text: String -> procesAnnotations(text) },
             { text: String -> processCapturedSlotValues(text) },
+            { text: String -> processDistinctImports(text) },
         )
+
+        private fun processDistinctImports(originalText: String): String {
+            val stringList = originalText.split("\n").toMutableList()
+            val indexOfFirst = stringList.indexOfFirst { it.startsWith("import") }
+            val indexOfLast = stringList.indexOfLast { it.startsWith("import") }
+            val allImports = mutableListOf<String>()
+            if (indexOfFirst > -1) {
+                for (i in indexOfFirst..indexOfLast) {
+                    allImports.add(stringList.removeAt(indexOfFirst))
+                }
+                stringList.addAll(indexOfFirst, allImports.sorted().distinct())
+            }
+            return stringList.joinToString("\n")
+        }
 
         private fun processCapturedSlotValues(originalText: String): String {
             var stringList = originalText.split("\n").toMutableList()
