@@ -203,7 +203,9 @@ class ConversionExpressions {
             Regex("Mockito\\.verify\\($GENERIC_GROUP_WITH_NEWLINE\\)(\n)?(\\s*)?\\.$GENERIC_GROUP_WITH_NEWLINE_STAR\"\\)\n")
 
         private val FIND_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected")
+        private val FIND_FUN_REGEX = Regex("fun $VARIABLE_GROUP")
         private val REPLACE_EXCEPTION_ANNOTATION_REGEX = Regex("@Test\\(expected = $GENERIC_GROUP::class\\)")
+        private val SLOT_EXPRESSION = Regex("val $GENERIC_GROUP = slot<$VARIABLE_GROUP>\\(\\)")
 
         private val ANY_TYPE_REGEX =
             Regex("(ArgumentMatchers|Mockito)\\.any\\((\n)?(\\s*)?$GENERIC_GROUP::class\\.java\\)")
@@ -403,8 +405,39 @@ class ConversionExpressions {
             { text: String -> processImports(text) },
             { text: String -> processExceptionExpectingTestMethods(text) },
             { text: String -> processAssertionsFindReplaceImport(text) },
-            { text: String -> procesAnnotations(text) }
+            { text: String -> procesAnnotations(text) },
+            { text: String -> processCapturedSlotValues(text) },
         )
+
+        private fun processCapturedSlotValues(originalText: String): String {
+            var stringList = originalText.split("\n").toMutableList()
+            var indexOfFunction = stringList.indexOfFirst { it.contains(FIND_FUN_REGEX) }
+            var indexOfFirst = stringList.indexOfFirst(indexOfFunction) { it.contains(SLOT_EXPRESSION) }
+            while (indexOfFunction > -1) {
+                val allSlots = mutableListOf<String>()
+                val indexOfNextClosure = stringList.indexOfNextClosure(indexOfFirst)
+                while (indexOfFirst > -1 && indexOfFirst <= indexOfNextClosure) {
+                    allSlots.add(stringList[indexOfFirst].replace(SLOT_EXPRESSION, "\$1").trim())
+                    indexOfFirst = stringList.indexOfFirst(indexOfFirst) { it.contains(SLOT_EXPRESSION) }
+                }
+                allSlots.forEach {
+                    val forExpression =
+                        Regex("(\\s*)for(\\s*)\\($VARIABLE_GROUP(\\s*)in(\\s*)$it\\.allValues\\)(\\s*)\\{")
+                    indexOfFirst = stringList.indexOfFirst(indexOfFunction) { test -> test.contains(forExpression) }
+                    if (indexOfFirst > -1) {
+                        val indexOfNextClosureForBlock = stringList.indexOfNextClosure(indexOfFirst)
+                        val tab = stringList[indexOfFirst].replace(forExpression, "\$1")
+                        for (i in (indexOfFirst + 1) until indexOfNextClosureForBlock) {
+                            stringList[i] = "$tab${stringList[i].trim()}"
+                        }
+                        stringList.removeAt(indexOfFirst)
+                        stringList.removeAt(stringList.indexOfNextClosure(indexOfFirst))
+                    }
+                }
+                indexOfFunction = stringList.indexOfFirst(indexOfFunction) { it.contains(FIND_FUN_REGEX) }
+            }
+            return stringList.joinToString("\n")
+        }
 
         private fun processExceptionExpectingTestMethods(originalText: String): String {
             var stringList = originalText.split("\n").toMutableList()
@@ -534,6 +567,25 @@ class ConversionExpressions {
             }
     }
 
+}
+
+private fun MutableList<String>.indexOfNextClosure(indexOfFirst: Int): Int {
+    var closureCount = 1
+    forEachIndexed { index, it ->
+        if (index >= indexOfFirst) {
+            for (i: Int in it.indices) {
+                if (it[i] == '{') {
+                    closureCount++
+                } else if (it[i] == '}') {
+                    closureCount--
+                }
+            }
+            if (closureCount == 0) {
+                return index
+            }
+        }
+    }
+    return -1
 }
 
 private fun <E> MutableList<E>.indexOfFirst(from: Int, predicate: (E) -> Boolean): Int {

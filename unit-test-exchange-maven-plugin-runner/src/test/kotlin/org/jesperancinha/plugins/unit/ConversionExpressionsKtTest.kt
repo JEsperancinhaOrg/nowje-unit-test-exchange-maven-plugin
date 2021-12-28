@@ -7,6 +7,30 @@ import org.junit.jupiter.api.Test
 internal class ConversionExpressionsKtTest {
 
     @Test
+    fun `should convert slot variables from loops to single usage`() {
+        val test = """
+                $PACKAGE
+                import org.junit.jupiter.api.Test
+                @Test
+                fun testRacoonsAndBonobos() {
+                    val fruitCaptor = slot<Chunky>()
+                    for (food in fruitCaptor.allValues) {
+                        sendFood.onHunger(food)
+                    }
+                }
+            """.trimIndent()
+        val processTests = test.processTests
+        processTests shouldBe """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            @Test
+            fun testRacoonsAndBonobos() {
+                val fruitCaptor = slot<Chunky>()
+                sendFood.onHunger(food)
+            }
+        """.trimIndent()
+    }
+    @Test
     fun `should convert wiremock declarations`() {
         val test = """
             $PACKAGE
@@ -15,8 +39,8 @@ internal class ConversionExpressionsKtTest {
             var racoonsSever = WireMockRule(WIREMOCK_PORT)
         """.trimIndent()
 
-        val processeTests = test.processTests
-        processeTests shouldBe """
+        val processTests = test.processTests
+        processTests shouldBe """
             $PACKAGE
             import org.junit.jupiter.api.Test
             import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
@@ -34,8 +58,8 @@ internal class ConversionExpressionsKtTest {
                 racoonResources.pickUp()))
         """.trimIndent()
 
-        val processeTests = test.processTests
-        processeTests shouldBe """
+        val processTests = test.processTests
+        processTests shouldBe """
             $PACKAGE
             import org.junit.jupiter.api.Test
             import io.mockk.every
@@ -53,8 +77,8 @@ internal class ConversionExpressionsKtTest {
             val bonoboFile = bonoboFileCabinet.newFile()
         """.trimIndent()
 
-        val processeTests = test.processTests
-        processeTests shouldBe """
+        val processTests = test.processTests
+        processTests shouldBe """
             $PACKAGE
             import org.junit.jupiter.api.Test
             import kotlin.io.path.createFile
@@ -75,8 +99,8 @@ internal class ConversionExpressionsKtTest {
             }
         """.trimIndent()
 
-        val processeTests = test.processTests
-        processeTests shouldBe """
+        val processTests = test.processTests
+        processTests shouldBe """
             $PACKAGE
             import org.junit.jupiter.api.Test
             import io.mockk.every
@@ -135,8 +159,8 @@ internal class ConversionExpressionsKtTest {
             bonobo = wilderness.newFile()
         """.trimIndent()
 
-        val processeTests = test.processTests
-        processeTests shouldBe """
+        val processTests = test.processTests
+        processTests shouldBe """
             $PACKAGE
             import org.junit.jupiter.api.Test
             import kotlin.io.path.createFile
@@ -155,8 +179,8 @@ internal class ConversionExpressionsKtTest {
             private val bonoboService: BonoboService? = null
         """.trimIndent()
 
-        val processeTests = test.processTests
-        processeTests shouldBe """
+        val processTests = test.processTests
+        processTests shouldBe """
             $PACKAGE
             import org.junit.jupiter.api.Test
             lateinit var racoonService: RacoonService
@@ -176,8 +200,8 @@ internal class ConversionExpressionsKtTest {
             }
         """.trimIndent()
 
-        val processeTests = test.processTests
-        processeTests shouldBe """
+        val processTests = test.processTests
+        processTests shouldBe """
             $PACKAGE
             import org.junit.jupiter.api.Test
             import io.kotest.assertions.throwables.shouldThrow
@@ -196,8 +220,8 @@ internal class ConversionExpressionsKtTest {
             Mockito.`when`(racoonMock!!.create(nest!!)).then(createMockNest(mockMaterials))
         """.trimIndent()
 
-        val processeTests = test.processTests
-        processeTests shouldBe """
+        val processTests = test.processTests
+        processTests shouldBe """
             $PACKAGE
             import org.junit.jupiter.api.Test
             import io.mockk.every
@@ -218,8 +242,8 @@ internal class ConversionExpressionsKtTest {
             }
         """.trimIndent()
 
-        val processeTests = test.processTests
-        processeTests shouldBe """
+        val processTests = test.processTests
+        processTests shouldBe """
             $PACKAGE
             import org.junit.jupiter.api.Test
             private fun bonoboAnswer(name: String?): Bonobo = Bonobo(banana, game, clock))
@@ -234,8 +258,8 @@ internal class ConversionExpressionsKtTest {
             Mockito.`when`(bonono.camp).thenReturn(archive.newFolder("racoon"))
         """.trimIndent()
 
-        val processeTests = test.processTests
-        processeTests shouldBe """
+        val processTests = test.processTests
+        processTests shouldBe """
             $PACKAGE
             import org.junit.jupiter.api.Test
             import kotlin.io.path.createDirectory
