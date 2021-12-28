@@ -247,6 +247,11 @@ class ConversionExpressions {
         private const val ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REPLACEMENT =
             "\$1\$2\$3fun \$4(\$5): \$6 = $6(\$12)"
 
+        private val WIREMOCK_DECLARATION_FROM_RULE_TO_INSTANCE_REGEX =
+            Regex("(private )?(protected )?(var|val) $GENERIC_GROUP = WireMockRule\\($CONSTANT_GROUP\\)")
+        private const val WIREMOCK_DECLARATION_FROM_RULE_TO_INSTANCE_REPLACEMENT =
+            "\$1\$2\$3 \$4 = WireMockServer(options().port(\$5))"
+
         private val CORRECTION1_REGEX =
             Regex("$GENERIC_GROUP shouldNotBe \\($GENERIC_GROUP\\)")
         private const val CORRECTION1_REPLACEMENT = "\$1 shouldNotBe \$2"
@@ -350,6 +355,9 @@ class ConversionExpressions {
             ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REGEX to (ANSWER_IMPLEMENTATION_FROM_MOCKITO_TO_MOCKK_TEST_REPLACEMENT to emptyArray()),
             EVERY_THEN_WITH_INVOCATION_ARGS_FROM_MOCKITO_TO_MOCKK_REGEX to (EVERY_THEN_WITH_INVOCATION_ARGS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf(
                 "import io.mockk.every")),
+            WIREMOCK_DECLARATION_FROM_RULE_TO_INSTANCE_REGEX to (WIREMOCK_DECLARATION_FROM_RULE_TO_INSTANCE_REPLACEMENT to arrayOf(
+                "import com.github.tomakehurst.wiremock.WireMockServer",
+                "import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options")),
             CORRECTION1_REGEX to (CORRECTION1_REPLACEMENT to emptyArray()),
             CORRECTION2_REGEX to (CORRECTION2_REPLACEMENT to emptyArray()),
             CORRECTION3_REGEX to (CORRECTION3_REPLACEMENT to emptyArray()),
@@ -379,6 +387,7 @@ class ConversionExpressions {
             Regex("import org.mockito.ArgumentCaptor(;)?\n") to "",
             Regex("import org.junit.Rule(;)?\n") to "",
             Regex("import org.junit.rules.TemporaryFolder(;)?\n") to "",
+            Regex("import com.github.tomakehurst.wiremock.junit.WireMockRule(;)?\n") to "",
             Regex("(\\s*)Mockito.verifyNoMoreInteractions\\($GENERIC_GROUP\\)(;)?\n") to "",
         )
 

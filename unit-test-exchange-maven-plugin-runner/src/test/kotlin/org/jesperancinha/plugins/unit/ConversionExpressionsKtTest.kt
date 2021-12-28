@@ -7,6 +7,25 @@ import org.junit.jupiter.api.Test
 internal class ConversionExpressionsKtTest {
 
     @Test
+    fun `should convert wiremock declarations`() {
+        val test = """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            import com.github.tomakehurst.wiremock.junit.WireMockRule
+            var racoonsSever = WireMockRule(WIREMOCK_PORT)
+        """.trimIndent()
+
+        val processeTests = test.processTests
+        processeTests shouldBe """
+            $PACKAGE
+            import org.junit.jupiter.api.Test
+            import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
+            import com.github.tomakehurst.wiremock.WireMockServer
+            var racoonsSever = WireMockServer(options().port(WIREMOCK_PORT))
+        """.trimIndent()
+    }
+
+    @Test
     fun `should convert returns`() {
         val test = """
             $PACKAGE
