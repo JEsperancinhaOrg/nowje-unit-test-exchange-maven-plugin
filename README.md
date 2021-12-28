@@ -4,6 +4,8 @@
 [![Generic badge](https://img.shields.io/static/v1.svg?label=GitHub&message=unit-test-exchange-maven-plugin&color=informational)](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin)
 [![Status badge](https://img.shields.io/static/v1.svg?label=Status&message=Under%20Construction%20🚧&color=informational)](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin)
 
+[![unit-test-exchange-maven-plugin](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin/actions/workflows/unit-test-exchange-maven-plugin.yml/badge.svg)](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin/actions/workflows/unit-test-exchange-maven-plugin.yml)
+
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c06e3239fe15454b9c415003cad928e5)](https://www.codacy.com/gh/JEsperancinhaOrg/unit-test-exchange-maven-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JEsperancinhaOrg/unit-test-exchange-maven-plugin&amp;utm_campaign=Badge_Grade)
 
 [![Coverage Status](https://coveralls.io/repos/github/JEsperancinhaOrg/unit-test-exchange-maven-plugin/badge.svg?branch=main)](https://coveralls.io/github/JEsperancinhaOrg/unit-test-exchange-maven-plugin?branch=main)
