@@ -427,8 +427,9 @@ class ConversionExpressions {
                     if (indexOfFirst > -1) {
                         val indexOfNextClosureForBlock = stringList.indexOfNextClosure(indexOfFirst)
                         val tab = stringList[indexOfFirst].replace(forExpression, "\$1")
+                        val subValue = stringList[indexOfFirst].replace(forExpression, "\$3")
                         for (i in (indexOfFirst + 1) until indexOfNextClosureForBlock) {
-                            stringList[i] = "$tab${stringList[i].trim()}"
+                            stringList[i] = "$tab${stringList[i].replace(subValue, "$it.captured").trim()}"
                         }
                         stringList.removeAt(indexOfFirst)
                         stringList.removeAt(stringList.indexOfNextClosure(indexOfFirst))

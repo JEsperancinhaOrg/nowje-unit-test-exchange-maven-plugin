@@ -26,7 +26,7 @@ internal class ConversionExpressionsKtTest {
             @Test
             fun testRacoonsAndBonobos() {
                 val fruitCaptor = slot<Chunky>()
-                sendFood.onHunger(food)
+                sendFood.onHunger(fruitCaptor.captured)
             }
         """.trimIndent()
     }
