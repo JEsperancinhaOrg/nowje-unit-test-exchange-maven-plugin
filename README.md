@@ -22,10 +22,10 @@ There are no official dates planned yet. The code is still very experimental and
 
 ## Options
 
-| Option | Function                                                                                                                      | Source Code |Target Code| Status                                                                                               | Manuals               |
-|--------|-------------------------------------------------------------------------------------------------------------------------------|-------------|---|------------------------------------------------------------------------------------------------------|-----------------------|
-| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ, Wiremock Rules to MockK, Jupiter, Wiremock for Jupiter and Kotest assertions | Kotlin      |Kotlin| InDevelopment (Mostly working. Wiremock not available yet. Still buggy in some Mockito corner cases) | [Option 1 Manual](./) |
-| 2      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, Jupiter and Kotest assertions                                       | Java        |Kotlin| On Hold                                                                                              | N/A                   |
+| Option | Function                                                                                                                      | Source Code |Target Code| Status                                                                                               | Manuals                            |
+|--------|-------------------------------------------------------------------------------------------------------------------------------|-------------|---|------------------------------------------------------------------------------------------------------|------------------------------------|
+| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ, Wiremock Rules to MockK, Jupiter, Wiremock for Jupiter and Kotest assertions | Kotlin      |Kotlin| InDevelopment (Mostly working. Wiremock not available yet. Still buggy in some Mockito corner cases) | [Option 1 Manual](./docs/manuals/) |
+| 2      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, Jupiter and Kotest assertions                                       | Java        |Kotlin| On Hold                                                                                              | N/A                                |
 
 ## Before running this plugin
 
