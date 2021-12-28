@@ -278,13 +278,21 @@ class ConversionExpressions {
             Regex("$VARIABLE_GROUP\\.newFolder\\(\\)")
         private const val CORRECTION60_REPLACEMENT = "createTempDirectory(\$1).toFile()"
 
+        private val CORRECTION61_REGEX =
+            Regex("$VARIABLE_GROUP\\.newFolder\\($CONSTANT_GROUP, $CONSTANT_GROUP, $CONSTANT_GROUP\\)")
+        private const val CORRECTION61_REPLACEMENT = "createDirectory(\$1.resolve(\$2).resolve(\$3).resolve(\$4)).toFile()"
+
+        private val CORRECTION62_REGEX =
+            Regex("$VARIABLE_GROUP\\.newFolder\\($CONSTANT_GROUP, $CONSTANT_GROUP\\)")
+        private const val CORRECTION62_REPLACEMENT = "createDirectory(\$1.resolve(\$2).resolve(\$3)).toFile()"
+
         private val CORRECTION6_REGEX =
             Regex("$VARIABLE_GROUP\\.newFolder\\($CONSTANT_GROUP\\)")
-        private const val CORRECTION6_REPLACEMENT = "Path(\$1.absolutePathString(), \$2).createDirectory().toFile()"
+        private const val CORRECTION6_REPLACEMENT = "createDirectory(\$1.resolve(\$2)).toFile()"
 
         private val CORRECTION7_REGEX =
             Regex("$VARIABLE_GROUP\\.newFile\\($CONSTANT_GROUP\\)")
-        private const val CORRECTION7_REPLACEMENT = "Path(\$1.absolutePathString(), \$2).createFile().toFile()"
+        private const val CORRECTION7_REPLACEMENT = "createFile(\$1.resolve(\$2)).toFile()"
 
         private val CORRECTION8_REGEX =
             Regex("$CONSTANT_GROUP2\\.root(?!\\.)")
@@ -370,10 +378,12 @@ class ConversionExpressions {
             CORRECTION4_REGEX to (CORRECTION4_REPLACEMENT to arrayOf("import kotlin.io.path.absolutePathString")),
             CORRECTION5_REGEX to (CORRECTION5_REPLACEMENT to arrayOf("import kotlin.io.path.absolutePathString")),
             CORRECTION60_REGEX to (CORRECTION60_REPLACEMENT to arrayOf("import kotlin.io.path.createTempDirectory")),
+            CORRECTION61_REGEX to (CORRECTION61_REPLACEMENT to arrayOf("import java.nio.file.Files.createDirectory")),
+            CORRECTION62_REGEX to (CORRECTION62_REPLACEMENT to arrayOf("import java.nio.file.Files.createDirectory")),
             CORRECTION6_REGEX to (CORRECTION6_REPLACEMENT to arrayOf("import kotlin.io.path.Path",
-                "import kotlin.io.path.absolutePathString", "import kotlin.io.path.createDirectory")),
+                "import kotlin.io.path.absolutePathString", "import java.nio.file.Files.createDirectory")),
             CORRECTION7_REGEX to (CORRECTION7_REPLACEMENT to arrayOf("import kotlin.io.path.Path",
-                "import kotlin.io.path.absolutePathString", "import kotlin.io.path.createFile")),
+                "import kotlin.io.path.absolutePathString", "import java.nio.file.Files.createFile")),
             CORRECTION8_REGEX to (CORRECTION8_REPLACEMENT to emptyArray()),
             CORRECTION9_REGEX to (CORRECTION9_REPLACEMENT to emptyArray()),
         )

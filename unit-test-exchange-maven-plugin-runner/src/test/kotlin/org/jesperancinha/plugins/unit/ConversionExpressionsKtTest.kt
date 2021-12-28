@@ -295,11 +295,11 @@ internal class ConversionExpressionsKtTest {
         processTests shouldBe """
             $PACKAGE
             import io.mockk.every
+            import java.nio.file.Files.createDirectory
             import kotlin.io.path.Path
             import kotlin.io.path.absolutePathString
-            import kotlin.io.path.createDirectory
             import org.junit.jupiter.api.Test
-            every { bonono.camp } returns Path(archive.absolutePathString(), "racoon").createDirectory().toFile()
+            every { bonono.camp } returns createDirectory(archive.resolve("racoon")).toFile()
         """.trimIndent()
     }
 
