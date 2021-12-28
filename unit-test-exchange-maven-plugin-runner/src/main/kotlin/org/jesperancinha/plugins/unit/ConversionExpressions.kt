@@ -395,7 +395,7 @@ class ConversionExpressions {
 
         private val ANNOTATIONS_REPLACEMENT_JUNIT_TO_JUPITER = mapOf(
             Regex("@Before\n") to "@BeforeEach\n",
-            Regex("@Mock\n") to "@MockK\n",
+            Regex("@Mock\n") to "@MockK(relaxed = true)\n",
             Regex("@RunWith\\(MockitoJUnitRunner::class\\)") to "@ExtendWith(MockKExtension::class)",
             Regex("@Test\\(expected = $GENERIC_GROUP::class\\)") to "@Test",
             Regex("\n(\\s)*@Rule\n") to "\n"
