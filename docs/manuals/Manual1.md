@@ -71,11 +71,16 @@ In the aftermath you may encounter a few problems:
 In order to provide a smooth transition, the converter migrates the Mock's from Mockito to the relaxed counter-part of MockK. The upside of this is that these won't complain about unimplemented mock methods. The downside is that unfortunately a MockK does not behave in exactly the same way as the Mocks from Mockito. If you are asserting null values from unimplemented mock methods, you will find differences in behaviour and your tests will fail. The fix is simple to do, of course, but not yet automated. So this means that in this case you'll have to change the code manually and add the missing implementations. However, if you are using this kind of expectations, it may just be that you unit test needs some kind of improvement purely because in that case it is not explicitly implemented what that unit test should do. This is very prone to errors in any case. 
 
 
-#### 5.2. Compile errors and unit test failures
+#### 5.2. slot<T> vs mutableList<T>
+
+In the conversion process, it is still difficult to determined whether we should choose a slot<T> or a mutableList<T> for our captures. This is because the capture in MockK, can be used several times. This means that converting from an argument capture implies that we know how to determine this. Programmatically, there are several corner cases. If a case is not expected and the converter does not recognize it, it will be converted to a slot by default. It is done in such a way that the code will likely still compile, but the unit tests may not run and you'll have to adapt it manualy.
+
+
+#### 5.3. Compile errors and unit test failures
 
 I will always try my best to avoid having compile errors as a result. They may occur and they are expected. Test failures are more difficult to solve. Current project still does not use a separate compiler during runtime and it still does not execute the resulting unit tests after conversion.
 All of these are expected. Running the compiler works for you and makes sure some actions are automated. You definitely get work done much quicker. However you still need to do some manual work to correct issues that may occur after running the converter.
 
-#### 5.3. Commit the code
+#### 5.4. Commit the code
 
 Once you've compared your resulting code to your CVS last commit, have performed all potential resulting errors, made sure that everything builds and that the new unit tests run as expected, you are ready to commit.
