@@ -229,7 +229,7 @@ class ConversionExpressions {
 
         private val RULE_TEMP_FILE_FROM_JUNIT_REGEX =
             Regex("$GENERIC_GROUP = $GENERIC_GROUP\\.newFile\\(\\)")
-        private const val RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT = "\$1 = \$2.createFile().toFile()"
+        private const val RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT = "\$1 = createTempFile(\$2).toFile()"
 
         private val RULE_TEMP_FILE_FROM_JUNIT_REGEX1 =
             Regex("$GENERIC_GROUP = $GENERIC_GROUP\\.newFile\\((\"$GENERIC_GROUP\"|$VARIABLE_GROUP)\\)")
@@ -274,6 +274,10 @@ class ConversionExpressions {
             Regex("$GENERIC_GROUP\\.$GENERIC_GROUP\\.absolutePath\\)")
         private const val CORRECTION5_REPLACEMENT = "\$1.\$2.absolutePathString()\\)"
 
+        private val CORRECTION60_REGEX =
+            Regex("$VARIABLE_GROUP\\.newFolder\\(\\)")
+        private const val CORRECTION60_REPLACEMENT = "createTempDirectory(\$1).toFile()"
+
         private val CORRECTION6_REGEX =
             Regex("$VARIABLE_GROUP\\.newFolder\\($CONSTANT_GROUP\\)")
         private const val CORRECTION6_REPLACEMENT = "Path(\$1.absolutePathString(), \$2).createDirectory().toFile()"
@@ -284,11 +288,11 @@ class ConversionExpressions {
 
         private val CORRECTION8_REGEX =
             Regex("$CONSTANT_GROUP2\\.root(?!\\.)")
-        private const val CORRECTION8_REPLACEMENT = "\$1.root.toFile()"
+        private const val CORRECTION8_REPLACEMENT = "\$1.toFile()"
 
         private val CORRECTION9_REGEX =
             Regex("root\\.toURI\\(\\).toURL\\(\\)")
-        private const val CORRECTION9_REPLACEMENT = "root.toUri().toURL()"
+        private const val CORRECTION9_REPLACEMENT = "toUri().toURL()"
 
         private val ASSERT_REPLACE_IMPORT_JUNIT_TO_JUPITER = mutableListOf(
             FAIL_FROM_JUNIT_TO_EXCEPTION_REGEX to (FAIL_FROM_JUNIT_TO_EXCEPTION_REPLACEMENT to arrayOf("import io.kotest.assertions.any")),
@@ -349,7 +353,7 @@ class ConversionExpressions {
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.verify")),
             VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REGEX1 to (VERIFY_SIMPLE_FROM_MOCKITO_TO_MOCKK_REPLACEMENT to arrayOf("import io.mockk.verify")),
             RULE_TEMP_FOLDER_FROM_JUNIT_REGEX to (RULE_TEMP_FOLDER_FROM_JUNIT_REPLACEMENT to arrayOf("import kotlin.io.path.createTempDirectory")),
-            RULE_TEMP_FILE_FROM_JUNIT_REGEX to (RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT to arrayOf("import kotlin.io.path.createFile")),
+            RULE_TEMP_FILE_FROM_JUNIT_REGEX to (RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT to arrayOf("import kotlin.io.path.createTempFile")),
             RULE_TEMP_FILE_FROM_JUNIT_REGEX1 to (RULE_TEMP_FILE_FROM_JUNIT_REPLACEMENT1 to emptyArray()),
             KOTLIN_INJECTION_TEST_REGEX to (KOTLIN_INJECTION_TEST_REPLACE to emptyArray()),
             ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.booleans.shouldBeFalse")),
@@ -365,6 +369,7 @@ class ConversionExpressions {
             CORRECTION3_REGEX to (CORRECTION3_REPLACEMENT to emptyArray()),
             CORRECTION4_REGEX to (CORRECTION4_REPLACEMENT to arrayOf("import kotlin.io.path.absolutePathString")),
             CORRECTION5_REGEX to (CORRECTION5_REPLACEMENT to arrayOf("import kotlin.io.path.absolutePathString")),
+            CORRECTION60_REGEX to (CORRECTION60_REPLACEMENT to arrayOf("import kotlin.io.path.createTempDirectory")),
             CORRECTION6_REGEX to (CORRECTION6_REPLACEMENT to arrayOf("import kotlin.io.path.Path",
                 "import kotlin.io.path.absolutePathString", "import kotlin.io.path.createDirectory")),
             CORRECTION7_REGEX to (CORRECTION7_REPLACEMENT to arrayOf("import kotlin.io.path.Path",

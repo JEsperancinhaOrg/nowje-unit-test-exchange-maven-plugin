@@ -113,10 +113,10 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import kotlin.io.path.createFile
+            import kotlin.io.path.createTempFile
             import org.junit.jupiter.api.Test
             val racoonFile = Path(racoonFileCabinet.absolutePathString(), fileName).toFile()
-            val bonoboFile = bonoboFileCabinet.createFile().toFile()
+            val bonoboFile = createTempFile(bonoboFileCabinet).toFile()
         """.trimIndent()
     }
 
@@ -195,11 +195,11 @@ internal class ConversionExpressionsKtTest {
         val processTests = test.processTests
         processTests shouldBe """
             $PACKAGE
-            import kotlin.io.path.createFile
             import kotlin.io.path.createTempDirectory
+            import kotlin.io.path.createTempFile
             import org.junit.jupiter.api.Test
             val wilderness = createTempDirectory()
-            bonobo = wilderness.createFile().toFile()
+            bonobo = createTempFile(wilderness).toFile()
         """.trimIndent()
     }
 
