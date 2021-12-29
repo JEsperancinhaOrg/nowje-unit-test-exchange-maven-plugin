@@ -59,22 +59,47 @@ class ConversionExpressions {
             Regex("Assert\\.assertTrue\\($GENERIC_GROUP_WITH_STAR\\)")
         private const val ASSERT_TRUE_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1.shouldBeTrue()"
 
+        /**
+         * Same
+         */
+        private val ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REGEX0 =
+            Regex("Assert\\.assertFalse\\($CONSTANT_GROUP\\s*(===?|\\.equals)\\s*$GENERIC_GROUP\\)")
+        private const val ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$3 shouldNotBeSameInstanceAs \$1"
+
+        private val ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertFalse\\($GENERIC_GROUP\\s*(===?|\\.equals)\\s*$GENERIC_GROUP\\)")
+        private const val ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldNotBeSameInstanceAs \$3"
+
+        private val ASSERT_FALSE_BUT_SAME_FROM_JUNIT_TO_KOTEST_REGEX0 =
+            Regex("Assert\\.assertTrue\\($CONSTANT_GROUP\\s*(===?|\\.equals)\\s*$GENERIC_GROUP\\)")
+        private const val ASSERT_FALSE_BUT_SAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$3 shouldBeSameInstanceAs \$1"
+
+        private val ASSERT_FALSE_BUT_SAME_FROM_JUNIT_TO_KOTEST_REGEX =
+            Regex("Assert\\.assertTrue\\($GENERIC_GROUP\\s*(===?|\\.equals)\\s*$GENERIC_GROUP\\)")
+        private const val ASSERT_FALSE_BUT_SAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldBeSameInstanceAs \$3"
+
+        /**
+         * Equals
+         */
         private val ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 =
-            Regex("Assert\\.assertFalse\\($CONSTANT_GROUP\\s*(==(=)?|\\.equals)\\s*$GENERIC_GROUP\\)")
-        private const val ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$4 shouldNotBe \$1"
+            Regex("Assert\\.assertFalse\\($CONSTANT_GROUP\\s*(==?|\\.equals)\\s*$GENERIC_GROUP\\)")
+        private const val ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$3 shouldNotBe \$1"
 
         private val ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REGEX =
-            Regex("Assert\\.assertFalse\\($GENERIC_GROUP\\s*(==(=)?|\\.equals)\\s*$GENERIC_GROUP\\)")
-        private const val ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldNotBe \$4"
+            Regex("Assert\\.assertFalse\\($GENERIC_GROUP\\s*(==?|\\.equals)\\s*$GENERIC_GROUP\\)")
+        private const val ASSERT_FALSE_BUT_NOTEQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldNotBe \$3"
 
         private val ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX0 =
-            Regex("Assert\\.assertTrue\\($CONSTANT_GROUP\\s*(==(=)?|\\.equals)\\s*$GENERIC_GROUP\\)")
-        private const val ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$4 shouldBe \$1"
+            Regex("Assert\\.assertTrue\\($CONSTANT_GROUP\\s*(==?|\\.equals)\\s*$GENERIC_GROUP\\)")
+        private const val ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$3 shouldBe \$1"
 
         private val ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX =
-            Regex("Assert\\.assertTrue\\($GENERIC_GROUP\\s*(==(=)?|\\.equals)\\s*$GENERIC_GROUP\\)")
-        private const val ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldBe \$4"
+            Regex("Assert\\.assertTrue\\($GENERIC_GROUP\\s*(==?|\\.equals)\\s*$GENERIC_GROUP\\)")
+        private const val ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldBe \$3"
 
+        /**
+         *
+         */
         private val ASSERT_EMPTY_FROM_HAMCREST_TO_KOTEST_REGEX =
             Regex("Assert\\.assertThat\\($GENERIC_GROUP, Matchers.`is`\\(Matchers\\.empty\\(\\)\\)\\)")
         private const val ASSERT_EMPTY_FROM_HAMCREST_TO_KOTEST_REPLACEMENT = "\$1.shouldBeEmpty()"
@@ -328,6 +353,14 @@ class ConversionExpressions {
                 "import io.kotest.matchers.shouldBe")),
             ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_BUT_EQUALS_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf(
                 "import io.kotest.matchers.shouldBe")),
+            ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REGEX0 to (ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 to arrayOf(
+                "import io.kotest.matchers.types.shouldNotBeSameInstanceAs")),
+            ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf(
+                "import io.kotest.matchers.types.shouldNotBeSameInstanceAs")),
+            ASSERT_FALSE_BUT_SAME_FROM_JUNIT_TO_KOTEST_REGEX0 to (ASSERT_FALSE_BUT_SAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 to arrayOf(
+                "import io.kotest.matchers.types.shouldBeSameInstanceAs")),
+            ASSERT_FALSE_BUT_SAME_FROM_JUNIT_TO_KOTEST_REGEX to (ASSERT_FALSE_BUT_SAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT to arrayOf(
+                "import io.kotest.matchers.types.shouldBeSameInstanceAs")),
             EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REGEX1 to (EVERY_THROWS_FROM_MOCKITO_TO_MOCKK_REPLACEMENT1 to arrayOf("import io.kotest.assertions.throwables.shouldThrow")),
             ASSERT_EMPTY_FROM_HAMCREST_TO_KOTEST_REGEX to (ASSERT_EMPTY_FROM_HAMCREST_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.collections.shouldBeEmpty")),
             ASSERT_IS_FROM_HAMCREST_TO_KOTEST_REGEX to (ASSERT_IS_FROM_HAMCREST_TO_KOTEST_REPLACEMENT to arrayOf("import io.kotest.matchers.shouldBe")),
