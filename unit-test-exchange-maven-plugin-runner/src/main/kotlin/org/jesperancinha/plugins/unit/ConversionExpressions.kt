@@ -64,11 +64,13 @@ class ConversionExpressions {
          */
         private val ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REGEX0 =
             Regex("Assert\\.assertFalse\\($CONSTANT_GROUP\\s*(===?|\\.equals)\\s*$GENERIC_GROUP\\)")
-        private const val ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 = "\$3 shouldNotBeSameInstanceAs \$1"
+        private const val ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT0 =
+            "\$3 shouldNotBeSameInstanceAs \$1"
 
         private val ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REGEX =
             Regex("Assert\\.assertFalse\\($GENERIC_GROUP\\s*(===?|\\.equals)\\s*$GENERIC_GROUP\\)")
-        private const val ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT = "\$1 shouldNotBeSameInstanceAs \$3"
+        private const val ASSERT_FALSE_BUT_NOTSAME_FROM_JUNIT_TO_KOTEST_REPLACEMENT =
+            "\$1 shouldNotBeSameInstanceAs \$3"
 
         private val ASSERT_FALSE_BUT_SAME_FROM_JUNIT_TO_KOTEST_REGEX0 =
             Regex("Assert\\.assertTrue\\($CONSTANT_GROUP\\s*(===?|\\.equals)\\s*$GENERIC_GROUP\\)")
@@ -305,11 +307,13 @@ class ConversionExpressions {
 
         private val CORRECTION61_REGEX =
             Regex("$VARIABLE_GROUP\\.newFolder\\($CONSTANT_GROUP, $CONSTANT_GROUP, $CONSTANT_GROUP\\)")
-        private const val CORRECTION61_REPLACEMENT = "createDirectory(\$1.resolve(\$2).resolve(\$3).resolve(\$4)).toFile()"
+        private const val CORRECTION61_REPLACEMENT =
+            "createDirectory(\$1.resolve(\$2).createDirectory().resolve(\$3).createDirectory().resolve(\$4)).toFile()"
 
         private val CORRECTION62_REGEX =
             Regex("$VARIABLE_GROUP\\.newFolder\\($CONSTANT_GROUP, $CONSTANT_GROUP\\)")
-        private const val CORRECTION62_REPLACEMENT = "createDirectory(\$1.resolve(\$2).resolve(\$3)).toFile()"
+        private const val CORRECTION62_REPLACEMENT =
+            "createDirectory(\$1.resolve(\$2).createDirectory().resolve(\$3)).toFile()"
 
         private val CORRECTION6_REGEX =
             Regex("$VARIABLE_GROUP\\.newFolder\\($CONSTANT_GROUP\\)")
@@ -411,8 +415,11 @@ class ConversionExpressions {
             CORRECTION4_REGEX to (CORRECTION4_REPLACEMENT to arrayOf("import kotlin.io.path.absolutePathString")),
             CORRECTION5_REGEX to (CORRECTION5_REPLACEMENT to arrayOf("import kotlin.io.path.absolutePathString")),
             CORRECTION60_REGEX to (CORRECTION60_REPLACEMENT to arrayOf("import kotlin.io.path.createTempDirectory")),
-            CORRECTION61_REGEX to (CORRECTION61_REPLACEMENT to arrayOf("import java.nio.file.Files.createDirectory")),
-            CORRECTION62_REGEX to (CORRECTION62_REPLACEMENT to arrayOf("import java.nio.file.Files.createDirectory")),
+            CORRECTION61_REGEX to (CORRECTION61_REPLACEMENT to arrayOf("import java.nio.file.Files.createDirectory",
+                "import java.nio.file.Files.createDirectory",
+                "import kotlin.io.path.createDirectory")),
+            CORRECTION62_REGEX to (CORRECTION62_REPLACEMENT to arrayOf("import java.nio.file.Files.createDirectory",
+                "import java.nio.file.Files.createDirectory","import kotlin.io.path.createDirectory")),
             CORRECTION6_REGEX to (CORRECTION6_REPLACEMENT to arrayOf("import kotlin.io.path.Path",
                 "import kotlin.io.path.absolutePathString", "import java.nio.file.Files.createDirectory")),
             CORRECTION7_REGEX to (CORRECTION7_REPLACEMENT to arrayOf("import kotlin.io.path.Path",
