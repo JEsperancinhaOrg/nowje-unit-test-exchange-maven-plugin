@@ -30,3 +30,6 @@ secret.sh
 *.iml
 target
 dependency-reduced-pom.xml
+
+# OS
+.DS_Store
