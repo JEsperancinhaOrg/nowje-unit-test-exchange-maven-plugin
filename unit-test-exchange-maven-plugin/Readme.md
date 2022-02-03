@@ -1,4 +1,4 @@
-# unit-test-exchange-maven-plugin Maven Plugin
+# nowje-unit-test-exchange-maven-plugin Maven Plugin
 
 ## About me 👨🏽‍💻🚀🏳️‍🌈
 

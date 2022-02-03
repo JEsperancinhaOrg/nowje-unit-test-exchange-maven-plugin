@@ -1,16 +1,16 @@
-# unit-test-exchange-maven-plugin
+# nowje-unit-test-exchange-maven-plugin
 
-[![Twitter URL](https://img.shields.io/twitter/url?logoColor=blue&style=social&url=https%3A%2F%2Fimg.shields.io%2Ftwitter%2Furl%3Fstyle%3Dsocial)](https://twitter.com/intent/tweet?text=%20Checkout%20this%20%40github%20repo%20by%20%40joaofse%20%F0%9F%91%A8%F0%9F%8F%BD%E2%80%8D%F0%9F%92%BB%3A%20https%3A//github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin)
-[![Generic badge](https://img.shields.io/static/v1.svg?label=GitHub&message=unit-test-exchange-maven-plugin&color=informational)](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin)
-[![Status badge](https://img.shields.io/static/v1.svg?label=Status&message=Under%20Construction%20🚧&color=informational)](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin)
+[![Twitter URL](https://img.shields.io/twitter/url?logoColor=blue&style=social&url=https%3A%2F%2Fimg.shields.io%2Ftwitter%2Furl%3Fstyle%3Dsocial)](https://twitter.com/intent/tweet?text=%20Checkout%20this%20%40github%20repo%20by%20%40joaofse%20%F0%9F%91%A8%F0%9F%8F%BD%E2%80%8D%F0%9F%92%BB%3A%20https%3A//github.com/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin)
+[![Generic badge](https://img.shields.io/static/v1.svg?label=GitHub&message=nowje-unit-test-exchange-maven-plugin&color=informational)](https://github.com/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin)
+[![Status badge](https://img.shields.io/static/v1.svg?label=Status&message=Under%20Construction%20🚧&color=informational)](https://github.com/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin)
 
-[![unit-test-exchange-maven-plugin](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin/actions/workflows/unit-test-exchange-maven-plugin.yml/badge.svg)](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin/actions/workflows/unit-test-exchange-maven-plugin.yml)
+[![nowje-unit-test-exchange-maven-plugin](https://github.com/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/actions/workflows/nowje-unit-test-exchange-maven-plugin.yml/badge.svg)](https://github.com/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/actions/workflows/nowje-unit-test-exchange-maven-plugin.yml)
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c06e3239fe15454b9c415003cad928e5)](https://www.codacy.com/gh/JEsperancinhaOrg/unit-test-exchange-maven-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JEsperancinhaOrg/unit-test-exchange-maven-plugin&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c06e3239fe15454b9c415003cad928e5)](https://www.codacy.com/gh/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin&amp;utm_campaign=Badge_Grade)
 
-[![Coverage Status](https://coveralls.io/repos/github/JEsperancinhaOrg/unit-test-exchange-maven-plugin/badge.svg?branch=main)](https://coveralls.io/github/JEsperancinhaOrg/unit-test-exchange-maven-plugin?branch=main)
-[![codecov](https://codecov.io/gh/JEsperancinhaOrg/unit-test-exchange-maven-plugin/branch/main/graph/badge.svg?token=Zy8Z6jcYW0)](https://codecov.io/gh/JEsperancinhaOrg/unit-test-exchange-maven-plugin)
-[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/c06e3239fe15454b9c415003cad928e5)](https://www.codacy.com/gh/JEsperancinhaOrg/unit-test-exchange-maven-plugin/dashboard?utm_source=github.com&utm_medium=referral&utm_content=JEsperancinhaOrg/unit-test-exchange-maven-plugin&utm_campaign=Badge_Coverage)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/c06e3239fe15454b9c415003cad928e5)](https://www.codacy.com/gh/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/dashboard?utm_source=github.com&utm_medium=referral&utm_content=JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin&utm_campaign=Badge_Coverage)
+[![Coverage Status](https://coveralls.io/repos/github/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/badge.svg?branch=main)](https://coveralls.io/github/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin?branch=main)
+[![codecov](https://codecov.io/gh/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/branch/main/graph/badge.svg?token=Zy8Z6jcYW0)](https://codecov.io/gh/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin)
 
 This plugin works as a tool to convert unit tests from one standard to another. The goal is to support conversion between many types of unit tests.
 Although the goal is to having it working flawlessly, it is actually, very hard to do it in practice. Think of this project as a helper if you want to convert between unit test, assertions and mock frameworks.
@@ -20,13 +20,13 @@ This project will, however suffer multiple improvements as I go along, and so yo
 
 --- Stand By ---
 
-There are no official dates planned yet. The code is still very experimental and there are no snapshots yet. You can, however, checkout the code already, compile it, and run it locally against your unit tests. The maven-plugin is not ready yet, but you can already try the runner. Check the [Readme.md](./unit-test-exchange-maven-plugin-runner/Readme.md) file on how to use it. I don't offer any guarantees at this point though, so make sure to check the results before committing anything. Checkout the [Roadmap](./Roadmap.md) for more detais.
+There are no official dates planned yet. The code is still very experimental and there are no snapshots yet. You can, however, checkout the code already, compile it, and run it locally against your unit tests. The maven-plugin is not ready yet, but you can already try the runner. Check the [Readme.md](./nowje-unit-test-exchange-maven-plugin-runner/Readme.md) file on how to use it. I don't offer any guarantees at this point though, so make sure to check the results before committing anything. Checkout the [Roadmap](./Roadmap.md) for more detais.
 
 ## Options
 
 | Option | Function                                                                                                                      | Source Code |Target Code| Status                                                                                               | Manuals                            |
 |--------|-------------------------------------------------------------------------------------------------------------------------------|-------------|---|------------------------------------------------------------------------------------------------------|------------------------------------|
-| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ, Wiremock Rules to MockK, Jupiter, Wiremock for Jupiter and Kotest assertions | Kotlin      |Kotlin| InDevelopment (Mostly working. Wiremock not available yet. Still buggy in some Mockito corner cases) | [Option 1 Manual](https://jesperancinhaorg.github.io/unit-test-exchange-maven-plugin/manuals/Manual1.html) |
+| 1      | Converts from JUnit, Mockito, Hamcrest, AssertJ, Wiremock Rules to MockK, Jupiter, Wiremock for Jupiter and Kotest assertions | Kotlin      |Kotlin| InDevelopment (Mostly working. Wiremock not available yet. Still buggy in some Mockito corner cases) | [Option 1 Manual](https://jesperancinhaorg.github.io/nowje-unit-test-exchange-maven-plugin/manuals/Manual1.html) |
 | 2      | Converts from JUnit, Mockito, Hamcrest, AssertJ to MockK, Jupiter and Kotest assertions                                       | Java        |Kotlin| On Hold                                                                                              | N/A                                |
 
 ## Before running this plugin

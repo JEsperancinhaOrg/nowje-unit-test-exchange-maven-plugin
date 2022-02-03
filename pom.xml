@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.jesperancinha.plugins</groupId>
-    <artifactId>unit-test-exchange-maven-plugin-parent</artifactId>
+    <artifactId>nowje-unit-test-exchange-maven-plugin-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>unit-test-exchange-maven-plugin-runner</module>
-        <module>unit-test-exchange-maven-plugin</module>
+        <module>nowje-unit-test-exchange-maven-plugin-runner</module>
+        <module>nowje-unit-test-exchange-maven-plugin</module>
     </modules>
     <properties>
         <jaxb-api.version>2.3.1</jaxb-api.version>

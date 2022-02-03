@@ -1,4 +1,4 @@
-# unit-test-exchange-maven-plugin
+# nowje-unit-test-exchange-maven-plugin
 
 ## Creating the plugin foundations
 ```shell

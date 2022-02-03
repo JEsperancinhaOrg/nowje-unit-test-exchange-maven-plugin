@@ -1,4 +1,4 @@
-# Manual for Option 1 - unit-test-exchange-maven-plugin - 
+# Manual for Option 1 - nowje-unit-test-exchange-maven-plugin - 
 
 ## 1. Introduction
 
@@ -60,7 +60,7 @@ General rule of thumb is: make sure your code is in Kotlin, formatted in a stand
 
 ## 4. Running the conversion tool
 
-Run the conversion tool as mentioned in the instructions on the [Readme.md](https://github.com/JEsperancinhaOrg/unit-test-exchange-maven-plugin/blob/main/unit-test-exchange-maven-plugin-runner/Readme.md) file.
+Run the conversion tool as mentioned in the instructions on the [Readme.md](https://github.com/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/blob/main/nowje-unit-test-exchange-maven-plugin-runner/Readme.md) file.
 
 ## 5. Aftermath
 

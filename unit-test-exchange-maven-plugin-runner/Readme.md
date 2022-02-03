@@ -1,9 +1,9 @@
-# org.jesperancinha.plugins unit-test-exchange-maven-plugin-runner
+# org.jesperancinha.plugins nowje-unit-test-exchange-maven-plugin-runner
 
 ## How to run
 
 ```
-java -jar unit-test-exchange-maven-plugin-runner.jar <option> <target-directory>
+java -jar nowje-unit-test-exchange-maven-plugin-runner.jar <option> <target-directory>
 ```
 
 ## About me 👨🏽‍💻🚀🏳️‍🌈
