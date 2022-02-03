@@ -8,7 +8,7 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/611a6a9698a94cfb99dd44c02e11417e)](https://www.codacy.com/gh/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin&amp;utm_campaign=Badge_Grade)
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/c06e3239fe15454b9c415003cad928e5)](https://www.codacy.com/gh/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/dashboard?utm_source=github.com&utm_medium=referral&utm_content=JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin&utm_campaign=Badge_Coverage)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/611a6a9698a94cfb99dd44c02e11417e)](https://www.codacy.com/gh/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/dashboard?utm_source=github.com&utm_medium=referral&utm_content=JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin&utm_campaign=Badge_Coverage)
 [![Coverage Status](https://coveralls.io/repos/github/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/badge.svg?branch=main)](https://coveralls.io/github/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin?branch=main)
 [![codecov](https://codecov.io/gh/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin/branch/main/graph/badge.svg?token=Zy8Z6jcYW0)](https://codecov.io/gh/JEsperancinhaOrg/nowje-unit-test-exchange-maven-plugin)
 
