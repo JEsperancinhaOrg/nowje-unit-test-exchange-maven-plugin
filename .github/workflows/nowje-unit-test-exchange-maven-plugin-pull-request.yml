@@ -1,4 +1,4 @@
-name: nowje-unit-test-exchange-maven-plugin
+name: nowje-unit-test-exchange-maven-plugin-pull-request
 
 on:
   push:
@@ -17,8 +17,4 @@ jobs:
     - name: Build
       run: mvn clean install
     - name: Coverage with Coveralls
-      run: mvn jacoco:prepare-agent package jacoco:report omni-coveragereporter:report
-      env:
-         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+      run: mvn jacoco:prepare-agent package jacoco:report
