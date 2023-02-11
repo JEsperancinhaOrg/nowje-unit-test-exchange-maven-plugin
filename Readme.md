@@ -66,7 +66,7 @@ Assert.assertThat(text, Matchers.containsString(test))
 1.  <b>Why did you built this in a hardcoded way? Wouldn't it be better to have a configuration file and use that with a Regex expression list?</b>   
 R. Short answer to this question is because it is not useful. A Long answer is much more complicated than that. This engine is implemented with search and replace functions which make heavy usage of ReGex expression. This demands processing time and for the most part it is a very reliable process. Not very efficient, but very reliable. However, the sequence of regular expressions change the code per executed expression. Some search expressions require extra processing such as the case of migrating a `shouldThrow` from annotated unit tests. On the other hand I'm developing with this project a reliable way to convert unit tests to whatever version you want them to be converted. This is especially useful for companies that want to update their code, have thousands of lines written in JUnit 3 and 4 and now want to move on to other frameworks like Kotest, Jupiter 5 or even Kotest engine, just to name a few. Making this reliable is a major concern for mine in this project. This implies the implementation of unit, integration and regression tests which will test if the sequence of regular expressions and the code processing on the fly works as it is meant to be. Allowing external configurations would get in the way of achieving an increasing reliability for every release.
 
-## About me 👨🏽‍💻🚀🏳️‍🌈
+## About me
 
 [![alt text](https://raw.githubusercontent.com/jesperancinha/project-signer/master/project-signer-templates/icons-20/JEOrgLogo-20.png "João Esperancinha Homepage")](http://joaofilipesabinoesperancinha.nl)
 [![GitHub followers](https://img.shields.io/github/followers/jesperancinha.svg?label=Jesperancinha&style=social "GitHub")](https://github.com/jesperancinha)
@@ -75,6 +75,8 @@ R. Short answer to this question is because it is not useful. A Long answer is m
 | [Sessionize](https://sessionize.com/joao-esperancinha/)
 | [Spotify](https://open.spotify.com/user/jlnozkcomrxgsaip7yvffpqqm?si=b54b89eae8894960)
 | [Medium](https://medium.com/@jofisaes)
+| [YouTube](https://www.youtube.com/@joaoesperancinha/featured)
+| [Instagram](https://www.instagram.com/joaofisaes/)
 | [Buy me a coffee](https://www.buymeacoffee.com/jesperancinha)
 | [Credly Badges](https://www.credly.com/users/joao-esperancinha)
 | [Google Apps](https://play.google.com/store/apps/developer?id=Joao+Filipe+Sabino+Esperancinha)
