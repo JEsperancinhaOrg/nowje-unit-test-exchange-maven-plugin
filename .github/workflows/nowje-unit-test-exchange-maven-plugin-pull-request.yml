@@ -2,6 +2,9 @@ name: nowje-unit-test-exchange-maven-plugin-pull-request
 
 on:
   push:
+    branches:
+      - '!main'
+  pull_request:
     branches: [ main ]
 
 jobs:
