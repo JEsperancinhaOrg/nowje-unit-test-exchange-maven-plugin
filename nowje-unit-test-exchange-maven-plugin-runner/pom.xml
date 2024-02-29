@@ -50,7 +50,7 @@
             <groupId>io.mockk</groupId>
             <artifactId>mockk</artifactId>
             <scope>test</scope>
-            <version>1.13.9</version>
+            <version>1.13.10</version>
         </dependency>
         <dependency>
             <groupId>io.kotest</groupId>
