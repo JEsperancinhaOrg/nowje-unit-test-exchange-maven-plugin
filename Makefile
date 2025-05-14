@@ -12,4 +12,4 @@ local: no-test
 	mkdir -p bin
 no-test:
 	mvn clean install -DskipTests
-build-run-a: b run-a
+build-run-a: b
