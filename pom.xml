@@ -20,7 +20,7 @@
         <junit-bom.version>5.13.0</junit-bom.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <maven.version>3.9.9</maven.version>
+        <maven.version>3.9.10</maven.version>
         <junit.version>4.13.2</junit.version>
     </properties>
 
